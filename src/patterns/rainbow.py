@@ -1,6 +1,6 @@
 from base import PatternBase
 from random import shuffle
-
+from time import time
 from utils import wheel
 
 
@@ -34,4 +34,3 @@ class Rainbow(PatternBase):
             self.i += 1
 
         return state
-

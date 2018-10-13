@@ -10,7 +10,6 @@ import signal
 
 from websocket_server import WebsocketServer
 
-
 from patterns.off import Off
 from patterns.rainbow import Rainbow
 from patterns.candycane import Candycane

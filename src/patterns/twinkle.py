@@ -1,5 +1,6 @@
 from base import PatternBase
 from random import random
+from neopixel import Color
 
 
 class Twinkle(PatternBase):

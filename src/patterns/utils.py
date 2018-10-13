@@ -1,5 +1,7 @@
+from neopixel import Color
 
-def wheel(pos, bri = 1):
+
+def wheel(pos, bri=1):
     """Generate rainbow colors across 0-255 positions."""
     if pos < 85:
         return Color(int((pos * 3)*bri), int((255 - pos * 3) * bri), 0)
