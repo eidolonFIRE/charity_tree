@@ -1,0 +1,48 @@
+from base import PatternBase
+from random import random
+
+
+class Twinkle(PatternBase):
+    def __init__(self, numPixels):
+        super(Twinkle, self).__init__(numPixels)
+
+    def clear(self):
+        self.stars = []
+
+    def _step(self, state, strip):
+        for i, x in enumerate(self.stars):
+            if x[1] == 0:
+                # dimming
+                if x[2] == [0,0,0]:
+                    if state == 3:
+                        self.stars.remove(x)
+                        if len(self.stars) == 0:
+                            print("---twinkle done")
+                            return 0
+                        break
+                    else:
+                        while True:
+                            idx = int(random() * 900) % self.numPx
+                            for st in self.stars:
+                                if idx == st[0]:
+                                    continue
+                            break
+                        self.stars[i][0] = idx
+                        self.stars[i][1] = 1
+                else:
+                    self.stars[i][2] = [max(0, c*9/10) for c in x[2]]
+            else:
+                # brightening
+                if x[2] == [255, 255, 255]:
+                    self.stars[i][1] = 0
+                else:
+                    self.stars[i][2] = [min(255, int(c + (random()**3)*25)) for c in x[2]]
+            strip.setPixelColor(x[0], Color(*x[2]))
+        if state == 1:
+            if len(self.stars) < 50:
+                if self.loopCount % 4 == 0:
+                    self.stars.append([int(random() * self.numPx), 1, [0,0,0]])
+            else:
+                print("---twinkle full")
+                return 2
+        return state
