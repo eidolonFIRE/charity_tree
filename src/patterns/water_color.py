@@ -8,7 +8,7 @@ from utils import wheel
 class WaterColor(PatternBase):
     def __init__(self, numPixels):
         super(WaterColor, self).__init__(numPixels)
-        self.strip_order = range(numPixels)
+        self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)
         self.buff = [0] * numPixels
 
