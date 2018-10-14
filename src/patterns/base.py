@@ -6,8 +6,8 @@ class PatternBase(object):
         self.numPx = numPixels
         self.state = 0
         self.loopCount = 0
-        self.strip_order = range(numPixels)
-        shuffle(list(self.strip_order))
+        self.strip_order = list(range(numPixels))
+        shuffle(self.strip_order)
         self.clear()
 
     def clear(self):
