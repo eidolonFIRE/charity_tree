@@ -1,4 +1,4 @@
-from neopixel import *
+from ledlib.neopixel import *
 
 from random import random
 from random import shuffle
@@ -8,7 +8,7 @@ from time import sleep
 from time import time
 import signal
 
-from websocket_server import WebsocketServer
+# from websocket_server import WebsocketServer
 
 from patterns.off import Off
 from patterns.rainbow import Rainbow
@@ -30,7 +30,7 @@ from patterns.water_color import WaterColor
 patterns = [
     # event , func           , full stop ,
     [-1 , Off(300)        , 0] ,
-    [-1 , Rainbow(300)    , 1] ,
+    [1 , Rainbow(300)    , 1] ,
     [-1 , Candycane(300)  , 0] ,
     [-1 , Classic(300)    , 0] ,
     [-1 , Wind(300)       , 0] ,
