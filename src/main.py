@@ -15,7 +15,7 @@ from patterns.rainbow import Rainbow
 from patterns.candycane import Candycane
 from patterns.classic import Classic
 from patterns.wind import Wind
-from patterns.tiwnkle import Twinkle
+from patterns.twinkle import Twinkle
 from patterns.fairy import Fairy
 from patterns.water_color import WaterColor
 
