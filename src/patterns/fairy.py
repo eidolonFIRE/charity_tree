@@ -2,7 +2,7 @@ from patterns.base import PatternBase
 from random import random
 from random import shuffle
 from neopixel import Color
-from patterns.utils import wheel
+from utils import wheel
 
 
 class Fairy(PatternBase):
