@@ -1,4 +1,4 @@
-from neopixel import Color
+from ledlib.neopixel import Color
 
 
 def wheel(pos, bri=1):
