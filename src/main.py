@@ -2,7 +2,7 @@ from ledlib.neopixel import *
 
 from random import random
 from random import shuffle
-from threading import Thread
+# from threading import Thread
 import sys
 from time import sleep
 from time import time

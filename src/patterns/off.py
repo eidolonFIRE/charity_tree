@@ -1,5 +1,4 @@
-
-from base import PatternBase
+from patterns.base import PatternBase
 from random import shuffle
 
 

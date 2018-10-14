@@ -1,4 +1,4 @@
-from base import PatternBase
+from patterns.base import PatternBase
 from random import random
 from random import shuffle
 from neopixel import Color
