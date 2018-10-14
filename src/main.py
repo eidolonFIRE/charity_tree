@@ -108,8 +108,6 @@ print('Press Ctrl+C to exit')
 
 strip = Adafruit_NeoPixel(300, 12, strip_type=ws.WS2811_STRIP_GRB)
 strip.begin()
-strip_order = range(strip.numPixels())
-shuffle(strip_order)
 
 while True:
     looptime = time()
