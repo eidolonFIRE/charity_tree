@@ -120,8 +120,8 @@ def job():
 
         delta = time() - looptime
         # print("%.4f"%(delta*40))
-        if delta < 1.0/40:
-            sleep(1.0/40 - delta)
+        if delta < 1.0/60:
+            sleep(1.0/60 - delta)
 
 
 
