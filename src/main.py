@@ -83,12 +83,14 @@ def serv_recvParser(cli, serv, msg):
 
 
 def signal_handler(signal, frame):
-    global serv_thread
-    global server
-    print("Exiting...")
-    server.server_close()
-    serv_thread.join()
-    sys.exit(0)
+    # global serv_thread
+    # global server
+    # print("Exiting...")
+    # server.server_close()
+    # serv_thread.join()
+    # sys.exit(0)
+    global done
+    done = True
 
 
 #================================================
@@ -150,5 +152,5 @@ while True:
 
 done = True
 
-main.job.join()
+main_job.join()
 
