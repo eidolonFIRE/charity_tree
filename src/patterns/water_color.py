@@ -25,7 +25,7 @@ class WaterColor(PatternBase):
     def _step(self, state, strip):
         if state == 1:
             self.buff = strip._led_data
-            print("---blur full")
+            print("---waterColor full")
             return 2
         for t in range(40):
             if self.i >= len(self.strip_order):
@@ -34,7 +34,7 @@ class WaterColor(PatternBase):
             if self.i == 0 and state == 3:
                 if self.cleared == 2:
                     self.cleared = 0
-                    print("---blur done")
+                    print("---waterColor done")
                     return 0
                 self.cleared += 1
             pos = self.strip_order[self.i]
@@ -68,5 +68,5 @@ class WaterColor(PatternBase):
             # change base color
             if self.loopCount % 100 == 0 and random() < 0.1:
                 self.baseC = int(random()*1024) % 256
-                print("---blur base color change %d" % self.baseC)
+                print("---waterColor base color change %d" % self.baseC)
         return state
