@@ -4,6 +4,7 @@ from random import shuffle
 class PatternBase(object):
     def __init__(self, numPixels):
         self.numPx = numPixels
+        self.full_stop = False
         self.state = 0
         self.loopCount = 0
         self.strip_order = list(range(numPixels))

@@ -2,7 +2,7 @@ from ledlib.neopixel import *
 
 from random import random
 from random import shuffle
-# from threading import Thread
+from threading import Thread
 import sys
 from time import sleep
 from time import time
@@ -29,14 +29,14 @@ from patterns.water_color import WaterColor
 # available catalog
 patterns = [
     # event , func           , full stop ,
-    [-1 , Off(300)        , 0] ,
-    [1 , Rainbow(300)    , 1] ,
-    [-1 , Candycane(300)  , 0] ,
-    [-1 , Classic(300)    , 0] ,
-    [-1 , Wind(300)       , 0] ,
-    [-1 , Twinkle(300)    , 0] ,
-    [-1 , Fairy(300)      , 0] ,
-    [-1 , WaterColor(300) , 1] ,
+    [-1 , Off(300)       ],
+    [-1 , Rainbow(300)   ],
+    [-1 , Candycane(300) ],
+    [-1 , Classic(300)   ],
+    [-1 , Wind(300)      ],
+    [-1 , Twinkle(300)   ],
+    [-1 , Fairy(300)     ],
+    [-1 , WaterColor(300)],
 ]
 
 allPats = [
@@ -69,7 +69,7 @@ def stop(name, offMode):
 
 
 def solo(name):
-    offMode = patterns[allPats.index(name)][2]
+    offMode = patterns[allPats.index(name)][1].full_stop
     for key in allPats:
         if key == name:
             start(key)
@@ -96,6 +96,33 @@ def signal_handler(signal, frame):
 #    MAIN / INIT
 #
 #------------------------------------------------
+done = False
+
+def job():
+    global done
+    strip = Adafruit_NeoPixel(300, 12, strip_type=ws.WS2811_STRIP_GRB)
+    strip.begin()
+    while not done:
+        looptime = time()
+        for idx in range(len(patterns)):
+            if patterns[idx][1].state > 0:
+                patterns[idx][1].step(strip)
+            if patterns[idx][0] >= 0:
+                if patterns[idx][0] == 1:  # turn on
+                    patterns[idx][1].state = 1
+                elif patterns[idx][0] == 3:  # turn off (gentle)
+                    patterns[idx][1].state = 3
+                elif patterns[idx][0] == 4:  # turn off (hard stop)
+                    patterns[idx][1].state = 0
+                    patterns[idx][1].clear()
+                patterns[idx][0] = -1
+        strip.show()
+
+        delta = time() - looptime
+        # print("%.4f"%(delta*40))
+        if delta < 1.0/40:
+            sleep(1.0/40 - delta)
+
 
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -106,26 +133,22 @@ print('Press Ctrl+C to exit')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-strip = Adafruit_NeoPixel(300, 12, strip_type=ws.WS2811_STRIP_GRB)
-strip.begin()
+main_job = Thread(target=job, args=())
+main_job.start()
 
 while True:
-    looptime = time()
-    for idx in range(len(patterns)):
-        if patterns[idx][1].state > 0:
-            patterns[idx][1].step(strip)
-        if patterns[idx][0] >= 0:
-            if patterns[idx][0] == 1:  # turn on
-                patterns[idx][1].state = 1
-            elif patterns[idx][0] == 3:  # turn off (gentle)
-                patterns[idx][1].state = 3
-            elif patterns[idx][0] == 4:  # turn off (hard stop)
-                patterns[idx][1].state = 0
-                patterns[idx][1].clear()
-            patterns[idx][0] = -1
-    strip.show()
+    cmd = raw_input(">")
+    words = cmd.split()
+    if words[0] == "start":
+        start(words[1])
+    if words[0] == "stop":
+        stop(words[1])
+    if words[0] == "solo":
+        solo(words[1])
+    if words[0] in ["quit", "exit"]:
+        break
 
-    delta = time() - looptime
-    # print("%.4f"%(delta*40))
-    if delta < 1.0/40:
-        sleep(1.0/40 - delta)
+done = True
+
+main.job.join()
+

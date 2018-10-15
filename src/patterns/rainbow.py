@@ -8,6 +8,7 @@ class Rainbow(PatternBase):
     def __init__(self, numPixels):
         super(Rainbow, self).__init__(numPixels)
         self.buff = [0] * numPixels
+        self.full_stop = True
 
     def clear(self):
         self.i = 0

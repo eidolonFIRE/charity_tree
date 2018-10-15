@@ -11,6 +11,7 @@ class WaterColor(PatternBase):
         self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)
         self.buff = [0] * numPixels
+        self.full_stop = True
 
     def clear(self):
         self.i = 0
