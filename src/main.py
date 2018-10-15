@@ -137,7 +137,7 @@ main_job = Thread(target=job, args=())
 main_job.start()
 
 while True:
-    cmd = raw_input(">")
+    cmd = input(">")
     words = cmd.split()
     if words[0] == "start":
         start(words[1])
