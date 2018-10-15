@@ -31,10 +31,10 @@ class Wind(PatternBase):
             else:
                 c = max(0, int(255.0 * ((0.5 - abs(((1.0 * self.wisp[i][1] - self.wisp[i][0])/(1.0 * self.wisp[i][1] - self.wisp[i][2])) - 0.5))*2.0)**4.0))
                 strip._led_data[self.wisp[i][0] - 1] = 0x0
-                strip._led_data[self.wisp[i][0]] = Color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), c/4)
+                strip._led_data[self.wisp[i][0]] = Color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), int(c/4))
                 self.wisp[i][0] += 1
-                strip._led_data[self.wisp[i][0]] = Color(int(c * self.wisp[i][3]),int(c * self.wisp[i][3]), c)
-                strip._led_data[self.wisp[i][0]+1] = Color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), c/4)
+                strip._led_data[self.wisp[i][0]] = Color(int(c * self.wisp[i][3]), int(c * self.wisp[i][3]), c)
+                strip._led_data[self.wisp[i][0]+1] = Color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), int(c/4))
 
         if state == 1:
             if len(self.wisp) < 20:
