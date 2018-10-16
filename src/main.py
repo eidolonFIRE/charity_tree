@@ -133,8 +133,8 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-# job1 = Thread(target=job, args=(18, 10, 0,))
-# job1.start()
+job1 = Thread(target=job, args=(18, 10, 0,))
+job1.start()
 
 job2 = Thread(target=job, args=(13, 11, 1,))
 job2.start()
