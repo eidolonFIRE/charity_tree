@@ -100,9 +100,9 @@ def signal_handler(signal, frame):
 #------------------------------------------------
 done = False
 
-def job():
+def job(pin):
     global done
-    strip = Adafruit_NeoPixel(300, 12, strip_type=ws.WS2811_STRIP_GRB)
+    strip = Adafruit_NeoPixel(300, pin, strip_type=ws.WS2811_STRIP_GRB)
     strip.begin()
     while not done:
         looptime = time()
@@ -128,15 +128,19 @@ def job():
 
 
 signal.signal(signal.SIGINT, signal_handler)
-print('Press Ctrl+C to exit')
+print('Press Ctrl+C to exit or use cmd \"exit\"')
 
 # server = WebsocketServer(12000, host="0.0.0.0")
 # server.set_fn_message_received(serv_recvParser)
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-main_job = Thread(target=job, args=())
-main_job.start()
+job1 = Thread(target=job, args=(12))
+job1.start()
+
+job2 = Thread(target=job, args=(33))
+job2.start()
+
 
 while True:
     cmd = input(">")
@@ -151,6 +155,3 @@ while True:
         break
 
 done = True
-
-main_job.join()
-
