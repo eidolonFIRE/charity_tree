@@ -100,9 +100,9 @@ def signal_handler(signal, frame):
 #------------------------------------------------
 done = False
 
-def job(pin, channel):
+def job(pin, dma, channel):
     global done
-    strip = Adafruit_NeoPixel(300, pin, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
+    strip = Adafruit_NeoPixel(300, pin=pin, dma=dma, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
     strip.begin()
     while not done:
         looptime = time()
@@ -136,7 +136,7 @@ print('Press Ctrl+C to exit or use cmd \"exit\"')
 # job1 = Thread(target=job, args=(12, 0,))
 # job1.start()
 
-job2 = Thread(target=job, args=(33, 1,))
+job2 = Thread(target=job, args=(33, 11, 1,))
 job2.start()
 
 
