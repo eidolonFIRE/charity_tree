@@ -126,17 +126,17 @@ def job(pin, dma, channel):
             sleep(1.0/60 - delta)
 
 signal.signal(signal.SIGINT, signal_handler)
-print('Press Ctrl+C to exit or use cmd \"exit\"')
+print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 
 # server = WebsocketServer(12000, host="0.0.0.0")
 # server.set_fn_message_received(serv_recvParser)
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-# job1 = Thread(target=job, args=(12, 0,))
+# job1 = Thread(target=job, args=(18, 10, 0,))
 # job1.start()
 
-job2 = Thread(target=job, args=(33, 11, 1,))
+job2 = Thread(target=job, args=(13, 11, 1,))
 job2.start()
 
 
