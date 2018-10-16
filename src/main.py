@@ -133,14 +133,14 @@ print('Press Ctrl+C to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-job1 = Thread(target=job, args=(12, 0,))
-job1.start()
+# job1 = Thread(target=job, args=(12, 0,))
+# job1.start()
 
-# job2 = Thread(target=job, args=(19, 1,))
-# job2.start()
+job2 = Thread(target=job, args=(19, 1,))
+job2.start()
 
 
-while True:
+while not done:
     cmd = input(">")
     words = cmd.split()
     if len(words) > 0:
