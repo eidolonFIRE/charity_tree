@@ -138,20 +138,22 @@ print('Press Ctrl+C to exit or use cmd \"exit\"')
 job1 = Thread(target=job, args=(12,))
 job1.start()
 
-job2 = Thread(target=job, args=(33,))
+job2 = Thread(target=job, args=(40,))
 job2.start()
 
 
 while True:
     cmd = input(">")
     words = cmd.split()
-    if words[0] == "start":
-        start(words[1])
-    if words[0] == "stop":
-        stop(words[1])
-    if words[0] == "solo":
-        solo(words[1])
-    if words[0] in ["quit", "exit"]:
-        break
+    if len(words) > 0:
+        if words[0] in ["quit", "exit"]:
+            break
+        if len(words) > 1:
+            if words[0] == "start":
+                start(words[1])
+            if words[0] == "stop":
+                stop(words[1])
+            if words[0] == "solo":
+                solo(words[1])
 
 done = True
