@@ -100,9 +100,9 @@ def signal_handler(signal, frame):
 #------------------------------------------------
 done = False
 
-def job(pin, dma, channel):
+def job(strip):
     global done
-    strip = Adafruit_NeoPixel(300, pin=pin, dma=dma, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
+    
     strip.begin()
     while not done:
         looptime = time()
@@ -118,12 +118,21 @@ def job(pin, dma, channel):
                     patterns[idx][1].state = 0
                     patterns[idx][1].clear()
                 patterns[idx][0] = -1
-        strip.show()
+        
 
         delta = time() - looptime
         # print("%.4f"%(delta*40))
         if delta < 1.0/60:
             sleep(1.0/60 - delta)
+
+
+def render(strip1, strip2):
+    global done
+    while not done:
+        strip1.show()
+        strip2.show()
+        sleep(1.0/60)
+
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
@@ -133,11 +142,16 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-job1 = Thread(target=job, args=(18, 10, 0,))
+strip1 = Adafruit_NeoPixel(300, pin=18, dma=10, channel=0, strip_type=ws.WS2811_STRIP_GRB)
+strip2 = Adafruit_NeoPixel(300, pin=13, dma=11, channel=1, strip_type=ws.WS2811_STRIP_GRB)
+
+job1 = Thread(target=job, args=(strip1,))# 18, 10, 0,))
 job1.start()
 
-job2 = Thread(target=job, args=(13, 11, 1,))
+job2 = Thread(target=job, args=(strip2,))#13, 11, 1,))
 job2.start()
+
+jobRefresh = Thread(target=render, args=(strip1, strip2,))
 
 
 while not done:
