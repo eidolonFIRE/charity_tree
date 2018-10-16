@@ -18,6 +18,9 @@ cd ../..
 ln -s rpi_ws281x/python src/ledlib 
 
 
+# blacklist sound pwm (this needs perms fix)
+sudo echo "blacklist snd_bcm2835" >> /etc/modprobe.d/snd-blacklist.conf
+
 
 
 

@@ -136,7 +136,7 @@ print('Press Ctrl+C to exit or use cmd \"exit\"')
 # job1 = Thread(target=job, args=(12, 0,))
 # job1.start()
 
-job2 = Thread(target=job, args=(19, 1,))
+job2 = Thread(target=job, args=(33, 1,))
 job2.start()
 
 
