@@ -58,7 +58,7 @@ class Strip(object):
         self.length = length
         self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=strip_type)
         self.hw.begin()
-        self.rainbow = Rainbow(length)
+        self.rainbow = Fairy(length)
         self.rainbow.state = 1
 
     def step(self):
@@ -145,9 +145,9 @@ def render(strip1, strip2):
     global done
     while not done:
         strip1.step()
-        sleep(1.0 / 60)
-        #strip2.step()
-        #sleep(1.0 / 60)
+        sleep(1.0 / 100)
+        strip2.step()
+        sleep(1.0 / 100)
 
         # looptime = time()
         # job(strip1)

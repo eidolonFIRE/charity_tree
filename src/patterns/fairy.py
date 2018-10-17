@@ -18,7 +18,7 @@ class Fairy(PatternBase):
     def newWisp(self, i=-1):
         d = (int(random()*100) % 2) * 2 - 1
         length = int(random() * 15 + 8)
-        px = range(1, length)
+        px = list(range(1, length))
         c = int(random() * 1024) % 256
         return [0 if d > 0 else self.numPx - 1, d, c, length, px]
 
