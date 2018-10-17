@@ -47,7 +47,7 @@ class Fairy(PatternBase):
                     strip._led_data[self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1]] = 0x0
                 if self.wisp[i][0] >= 0 and self.wisp[i][0] < self.numPx:
                     strip._led_data[self.wisp[i][0]] = Color(255, 255, 255)
-                for x in self.wisp[i][4][0:self.wisp[i][3]/3]:
+                for x in self.wisp[i][4][0:int(self.wisp[i][3]/3)]:
                     x = x * self.wisp[i][1]
                     if self.wisp[i][0] - x >= 0 and self.wisp[i][0] - x < self.numPx:
                         b = (((self.wisp[i][3]+1)-abs(x))/float(self.wisp[i][3]-1))**3 * self.strip_b[(self.wisp[i][0] + x)%self.numPx]
