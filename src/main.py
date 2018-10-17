@@ -145,7 +145,9 @@ def render(strip1, strip2):
     global done
     while not done:
         strip1.step()
+        sleep(1.0 / 60)
         strip2.step()
+        sleep(1.0 / 60)
 
         # looptime = time()
         # job(strip1)
