@@ -62,7 +62,7 @@ class Strip(object):
 
     def step(self):
         self.hw.begin()
-        self.rainbow[1].step(self.hw)
+        self.rainbow.step(self.hw)
         self.hw.show()
 
 
