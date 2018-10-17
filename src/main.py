@@ -159,6 +159,7 @@ strip2.begin()
 # job2.start()
 
 jobRefresh = Thread(target=render, args=(strip1, strip2,))
+jobRefresh.start()
 
 
 while not done:
