@@ -59,6 +59,7 @@ class Strip(object):
         self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=strip_type)
         self.hw.begin()
         self.rainbow = Rainbow(length)
+        self.rainbow.state = 1
 
     def step(self):
         self.rainbow.step(self.hw)
