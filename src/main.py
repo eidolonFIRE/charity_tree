@@ -1,4 +1,4 @@
-from ledlib.neopixel import *
+from ledlib.neopixel import Adafruit_NeoPixel, ws
 
 from random import random
 from random import shuffle
@@ -27,28 +27,45 @@ from patterns.water_color import WaterColor
 #------------------------------------------------
 
 # available catalog
-patterns = [
-    # event , func           , full stop ,
-    [-1 , Off(300)       ],
-    [-1 , Rainbow(300)   ],
-    [-1 , Candycane(300) ],
-    [-1 , Classic(300)   ],
-    [-1 , Wind(300)      ],
-    [-1 , Twinkle(300)   ],
-    [-1 , Fairy(300)     ],
-    [-1 , WaterColor(300)],
-]
+# patterns = [
+#     # event , func           , full stop ,
+#     [-1 , Off(300)       ],
+#     [-1 , Rainbow(300)   ],
+#     [-1 , Candycane(300) ],
+#     [-1 , Classic(300)   ],
+#     [-1 , Wind(300)      ],
+#     [-1 , Twinkle(300)   ],
+#     [-1 , Fairy(300)     ],
+#     [-1 , WaterColor(300)],
+# ]
 
-allPats = [
-    "off",
-    "rainbow",
-    "candycane",
-    "classic",
-    "wind",
-    "twinkle",
-    "fairy",
-    "watercolor",
-]
+# allPats = [
+#     "off",
+#     "rainbow",
+#     "candycane",
+#     "classic",
+#     "wind",
+#     "twinkle",
+#     "fairy",
+#     "watercolor",
+# ]
+
+
+class Strip(object):
+    """   """
+    def __init__(self, length, pin, dma, channel, strip_type):
+        super(Strip, self).__init__()
+        self.length = length
+        self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=strip_type)
+
+        self.rainbow = Rainbow(length)
+
+    def step(self):
+        self.hw.begin()
+        self.rainbow[1].step(self.hw)
+        self.hw.show()
+
+
 
 
 #================================================
@@ -56,30 +73,30 @@ allPats = [
 #    SERVER
 #
 #------------------------------------------------
-def start(name):
-    if name in allPats:
-        if patterns[allPats.index(name)][1].state != 2:
-            patterns[allPats.index(name)][0] = 1
+# def start(name):
+#     if name in allPats:
+#         if patterns[allPats.index(name)][1].state != 2:
+#             patterns[allPats.index(name)][0] = 1
 
 
-def stop(name, offMode):
-    if name in allPats:
-        if patterns[allPats.index(name)][1].state != 0:
-            patterns[allPats.index(name)][0] = 4 if offMode else 3
+# def stop(name, offMode):
+#     if name in allPats:
+#         if patterns[allPats.index(name)][1].state != 0:
+#             patterns[allPats.index(name)][0] = 4 if offMode else 3
 
 
-def solo(name):
-    offMode = patterns[allPats.index(name)][1].full_stop
-    for key in allPats:
-        if key == name:
-            start(key)
-        else:
-            stop(key, offMode)
+# def solo(name):
+#     offMode = patterns[allPats.index(name)][1].full_stop
+#     for key in allPats:
+#         if key == name:
+#             start(key)
+#         else:
+#             stop(key, offMode)
 
 
-def serv_recvParser(cli, serv, msg):
-    print(msg)
-    solo(msg)
+# def serv_recvParser(cli, serv, msg):
+#     print(msg)
+#     solo(msg)
 
 
 def signal_handler(signal, frame):
@@ -100,25 +117,25 @@ def signal_handler(signal, frame):
 #------------------------------------------------
 done = False
 
-def job(strip):
+# def job(strip):
     # global done
     
     
     # while not done:
     
-    for idx in range(len(patterns)):
-        if patterns[idx][1].state > 0:
-            patterns[idx][1].step(strip)
-        if patterns[idx][0] >= 0:
-            if patterns[idx][0] == 1:  # turn on
-                patterns[idx][1].state = 1
-            elif patterns[idx][0] == 3:  # turn off (gentle)
-                patterns[idx][1].state = 3
-            elif patterns[idx][0] == 4:  # turn off (hard stop)
-                patterns[idx][1].state = 0
-                patterns[idx][1].clear()
-            patterns[idx][0] = -1
-    strip.show()
+    # for idx in range(len(patterns)):
+    #     if patterns[idx][1].state > 0:
+    #         patterns[idx][1].step(strip)
+    #     if patterns[idx][0] >= 0:
+    #         if patterns[idx][0] == 1:  # turn on
+    #             patterns[idx][1].state = 1
+    #         elif patterns[idx][0] == 3:  # turn off (gentle)
+    #             patterns[idx][1].state = 3
+    #         elif patterns[idx][0] == 4:  # turn off (hard stop)
+    #             patterns[idx][1].state = 0
+    #             patterns[idx][1].clear()
+    #         patterns[idx][0] = -1
+    # strip.show()
     
 
 
@@ -127,17 +144,20 @@ def job(strip):
 def render(strip1, strip2):
     global done
     while not done:
+        strip1.step()
+        strip2.step()
 
-        looptime = time()
-        job(strip1)
+        # looptime = time()
+        # job(strip1)
         # sleep(1.0/100)
-        job(strip2)
+        # job(strip2)
+        # sleep(1.0/100)
 
-        delta = time() - looptime
+        # delta = time() - looptime
         # print("%.4f"%(delta*40))
-        if delta < 1.0/60:
-            sleep(1.0/60 - delta)
-            print(1.0/60 - delta)
+        # if delta < 1.0/60:
+        #     sleep(1.0/60 - delta)
+        #     print(1.0/60 - delta)
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
@@ -147,16 +167,11 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-strip1 = Adafruit_NeoPixel(300, pin=18, dma=10, channel=0, strip_type=ws.WS2811_STRIP_GRB)
-strip2 = Adafruit_NeoPixel(300, pin=13, dma=11, channel=1, strip_type=ws.WS2811_STRIP_GRB)
-strip1.begin()
-strip2.begin()
+# strip1 = Adafruit_NeoPixel(300, pin=18, dma=10, channel=0, strip_type=ws.WS2811_STRIP_GRB)
+# strip2 = Adafruit_NeoPixel(300, pin=13, dma=11, channel=1, strip_type=ws.WS2811_STRIP_GRB)
 
-# job1 = Thread(target=job, args=(strip1,))# 18, 10, 0,))
-# job1.start()
-
-# job2 = Thread(target=job, args=(strip2,))#13, 11, 1,))
-# job2.start()
+strip1 = Strip(300, 18, 10, 0, ws.WS2811_STRIP_GRB)
+strip2 = Strip(300, 13, 11, 1, ws.WS2811_STRIP_GRB)
 
 jobRefresh = Thread(target=render, args=(strip1, strip2,))
 jobRefresh.start()
@@ -168,12 +183,12 @@ while not done:
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
             break
-        if len(words) > 1:
-            if words[0] == "start":
-                start(words[1])
-            if words[0] == "stop":
-                stop(words[1])
-            if words[0] == "solo":
-                solo(words[1])
+        # if len(words) > 1:
+        #     if words[0] == "start":
+        #         start(words[1])
+        #     if words[0] == "stop":
+        #         stop(words[1])
+        #     if words[0] == "solo":
+        #         solo(words[1])
 
 done = True
