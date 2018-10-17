@@ -101,38 +101,43 @@ def signal_handler(signal, frame):
 done = False
 
 def job(strip):
-    global done
+    # global done
     
-    strip.begin()
-    while not done:
-        looptime = time()
-        for idx in range(len(patterns)):
-            if patterns[idx][1].state > 0:
-                patterns[idx][1].step(strip)
-            if patterns[idx][0] >= 0:
-                if patterns[idx][0] == 1:  # turn on
-                    patterns[idx][1].state = 1
-                elif patterns[idx][0] == 3:  # turn off (gentle)
-                    patterns[idx][1].state = 3
-                elif patterns[idx][0] == 4:  # turn off (hard stop)
-                    patterns[idx][1].state = 0
-                    patterns[idx][1].clear()
-                patterns[idx][0] = -1
-        
+    
+    # while not done:
+    
+    for idx in range(len(patterns)):
+        if patterns[idx][1].state > 0:
+            patterns[idx][1].step(strip)
+        if patterns[idx][0] >= 0:
+            if patterns[idx][0] == 1:  # turn on
+                patterns[idx][1].state = 1
+            elif patterns[idx][0] == 3:  # turn off (gentle)
+                patterns[idx][1].state = 3
+            elif patterns[idx][0] == 4:  # turn off (hard stop)
+                patterns[idx][1].state = 0
+                patterns[idx][1].clear()
+            patterns[idx][0] = -1
+    strip.show()
+    
 
-        delta = time() - looptime
-        # print("%.4f"%(delta*40))
-        if delta < 1.0/60:
-            sleep(1.0/60 - delta)
+
 
 
 def render(strip1, strip2):
     global done
     while not done:
-        strip1.show()
-        strip2.show()
-        sleep(1.0/60)
 
+        looptime = time()
+        job(strip1)
+        # sleep(1.0/100)
+        job(strip2)
+
+        delta = time() - looptime
+        # print("%.4f"%(delta*40))
+        if delta < 1.0/60:
+            sleep(1.0/60 - delta)
+            print(1.0/60 - delta)
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
@@ -144,12 +149,14 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 
 strip1 = Adafruit_NeoPixel(300, pin=18, dma=10, channel=0, strip_type=ws.WS2811_STRIP_GRB)
 strip2 = Adafruit_NeoPixel(300, pin=13, dma=11, channel=1, strip_type=ws.WS2811_STRIP_GRB)
+strip1.begin()
+strip2.begin()
 
-job1 = Thread(target=job, args=(strip1,))# 18, 10, 0,))
-job1.start()
+# job1 = Thread(target=job, args=(strip1,))# 18, 10, 0,))
+# job1.start()
 
-job2 = Thread(target=job, args=(strip2,))#13, 11, 1,))
-job2.start()
+# job2 = Thread(target=job, args=(strip2,))#13, 11, 1,))
+# job2.start()
 
 jobRefresh = Thread(target=render, args=(strip1, strip2,))
 
