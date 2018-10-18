@@ -1,4 +1,4 @@
-from patterns.base import PatternBase
+from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
 from ledlib.neopixel import Color
@@ -25,21 +25,21 @@ class Classic(PatternBase):
         for i in range(len(self.dots)):
             if self.dots[i][1] == 0:
                 strip.setPixelColor(self.dots[i][0], 0x0)
-                if state != 3:
+                if state != State.STOP:
                     self.dots[i] = self.newDot(strip, i)
                 else:
                     del self.dots[i]
                     if len(self.dots) == 0:
                         shuffle(self.strip_order)
                         print("---classic done")
-                        return 0
+                        return State.OFF
                     break
             else:
                 self.dots[i][1] -= 1
-        if state == 1:
+        if state == State.START:
             if len(self.dots) < 75:
                 self.dots.append(self.newDot(strip, len(self.dots)))
             else:
                 print("---classic full")
-                return 2
+                return State.RUNNING
         return state

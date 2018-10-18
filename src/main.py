@@ -1,70 +1,10 @@
-from ledlib.neopixel import Adafruit_NeoPixel, ws
-
-from random import random
-from random import shuffle
 from threading import Thread
-import sys
 from time import sleep
-from time import time
 import signal
 
+from strip import Strip
+
 # from websocket_server import WebsocketServer
-
-from patterns.off import Off
-from patterns.rainbow import Rainbow
-from patterns.candycane import Candycane
-from patterns.classic import Classic
-from patterns.wind import Wind
-from patterns.twinkle import Twinkle
-from patterns.fairy import Fairy
-from patterns.water_color import WaterColor
-
-
-#================================================
-#
-#    STATES / CONTROLS
-#
-#------------------------------------------------
-
-# available catalog
-# patterns = [
-#     # event , func           , full stop ,
-#     [-1 , Off(300)       ],
-#     [-1 , Rainbow(300)   ],
-#     [-1 , Candycane(300) ],
-#     [-1 , Classic(300)   ],
-#     [-1 , Wind(300)      ],
-#     [-1 , Twinkle(300)   ],
-#     [-1 , Fairy(300)     ],
-#     [-1 , WaterColor(300)],
-# ]
-
-# allPats = [
-#     "off",
-#     "rainbow",
-#     "candycane",
-#     "classic",
-#     "wind",
-#     "twinkle",
-#     "fairy",
-#     "watercolor",
-# ]
-
-
-class Strip(object):
-    """   """
-    def __init__(self, length, pin, dma, channel, strip_type):
-        super(Strip, self).__init__()
-        self.length = length
-        self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=strip_type)
-        self.hw.begin()
-        self.rainbow = Fairy(length)
-        self.rainbow.state = 1
-
-    def step(self):
-        self.rainbow.step(self.hw)
-        self.hw.show()
-
 
 
 
@@ -116,50 +56,19 @@ def signal_handler(signal, frame):
 #
 #------------------------------------------------
 done = False
-
-# def job(strip):
-    # global done
-    
-    
-    # while not done:
-    
-    # for idx in range(len(patterns)):
-    #     if patterns[idx][1].state > 0:
-    #         patterns[idx][1].step(strip)
-    #     if patterns[idx][0] >= 0:
-    #         if patterns[idx][0] == 1:  # turn on
-    #             patterns[idx][1].state = 1
-    #         elif patterns[idx][0] == 3:  # turn off (gentle)
-    #             patterns[idx][1].state = 3
-    #         elif patterns[idx][0] == 4:  # turn off (hard stop)
-    #             patterns[idx][1].state = 0
-    #             patterns[idx][1].clear()
-    #         patterns[idx][0] = -1
-    # strip.show()
-    
-
-
-
-
-def render(strip1, strip2):
+def render():
     global done
+
+    strips = [
+            Strip(300, 18, 10, 0),
+            Strip(300, 13, 11, 1),
+            Strip(300, 21, 12, 3),
+        ]
     while not done:
-        strip1.step()
-        sleep(1.0 / 100)
-        strip2.step()
-        sleep(1.0 / 100)
+        for each in strips:
+            each.step()
+            sleep(1.0 / 200)
 
-        # looptime = time()
-        # job(strip1)
-        # sleep(1.0/100)
-        # job(strip2)
-        # sleep(1.0/100)
-
-        # delta = time() - looptime
-        # print("%.4f"%(delta*40))
-        # if delta < 1.0/60:
-        #     sleep(1.0/60 - delta)
-        #     print(1.0/60 - delta)
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
@@ -169,13 +78,7 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-# strip1 = Adafruit_NeoPixel(300, pin=18, dma=10, channel=0, strip_type=ws.WS2811_STRIP_GRB)
-# strip2 = Adafruit_NeoPixel(300, pin=13, dma=11, channel=1, strip_type=ws.WS2811_STRIP_GRB)
-
-strip1 = Strip(300, 18, 10, 0, ws.WS2811_STRIP_GRB)
-strip2 = Strip(300, 13, 11, 1, ws.WS2811_STRIP_GRB)
-
-jobRefresh = Thread(target=render, args=(strip1, strip2,))
+jobRefresh = Thread(target=render, args=())
 jobRefresh.start()
 
 

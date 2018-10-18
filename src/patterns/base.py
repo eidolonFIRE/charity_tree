@@ -1,11 +1,21 @@
 from random import shuffle
+from enum import Enum
+
+
+class State(Enum):
+    UNKNOWN = -1
+    OFF = 0
+    START = 1
+    RUNNING = 2
+    STOP = 3
+    HARDSTOP = 4
 
 
 class PatternBase(object):
     def __init__(self, numPixels):
         self.numPx = numPixels
         self.full_stop = False
-        self.state = 0
+        self.state = State.OFF
         self.loopCount = 0
         self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)

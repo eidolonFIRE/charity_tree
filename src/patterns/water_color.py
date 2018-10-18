@@ -1,4 +1,4 @@
-from patterns.base import PatternBase
+from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
 
@@ -23,22 +23,22 @@ class WaterColor(PatternBase):
         return [int(random()*900) % self.numPx, wheel((self.baseC + int(random() * 40)) % 256, random()**2)]
 
     def _step(self, state, strip):
-        if state == 1:
+        if state == State.START:
             self.buff = strip._led_data
             print("---waterColor full")
-            return 2
+            return State.RUNNING
         for t in range(40):
             if self.i >= len(self.strip_order):
                 self.i = 0
                 shuffle(self.strip_order)
-            if self.i == 0 and state == 3:
+            if self.i == 0 and state == State.STOP:
                 if self.cleared == 2:
                     self.cleared = 0
                     print("---waterColor done")
-                    return 0
+                    return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            if state != 3:
+            if state != State.STOP:
                 c0 = self.buff[pos-1]
                 # c1 = self.buff[pos]
                 c2 = self.buff[(pos+1)%self.numPx]
@@ -49,7 +49,7 @@ class WaterColor(PatternBase):
             else:
                 self.buff[pos] = 0
             self.i += 1
-        if state != 3:
+        if state != State.STOP:
             # update base dots
             for t in self.dots:
                 self.buff[t[0]] = t[1]

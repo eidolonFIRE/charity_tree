@@ -1,4 +1,4 @@
-from patterns.base import PatternBase
+from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
 from ledlib.neopixel import Color
@@ -25,11 +25,11 @@ class Fairy(PatternBase):
     def _step(self, state, strip):
         for i in range(len(self.wisp)):
             shuffle(self.wisp[i][4])
-            if state == 3:
+            if state == State.STOP:
                 if self.wisp[i][1] > 0 and self.wisp[i][0] < self.numPx / 2 or self.wisp[i][1] < 0 and self.wisp[i][0] > self.numPx / 2:
                     self.wisp[i][1] = -self.wisp[i][1]
             if self.wisp[i][0] > self.numPx + self.wisp[i][3] or self.wisp[i][0] < -self.wisp[i][3]:
-                if state != 3:
+                if state != State.STOP:
                     if random() < 0.02 and self.spawn > 50:
                         self.wisp[i] = self.newWisp(i)
                         self.spawn = 0
@@ -40,7 +40,7 @@ class Fairy(PatternBase):
                         shuffle(self.strip_b)
                         shuffle(self.strip_c)
                         print("---fairy done")
-                        return 0
+                        return State.OFF
                     break
             else:
                 if self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] >= 0 and self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] < self.numPx:
@@ -54,7 +54,7 @@ class Fairy(PatternBase):
                         c = wheel((self.wisp[i][2] + self.strip_c[(self.wisp[i][0] + x)%self.numPx]) % 256, b)
                         strip._led_data[self.wisp[i][0] - x] = c
                 self.wisp[i][0] += self.wisp[i][1]
-        if state == 1:
+        if state == State.START:
             if len(self.wisp) < 6:
                 if (self.spawn > 50 and random() < 0.1) or len(self.wisp) == 0:
                     self.wisp.append(self.newWisp())
@@ -62,5 +62,5 @@ class Fairy(PatternBase):
                 self.spawn += 1
             else:
                 print("---fairy full")
-                return 2
+                return State.RUNNING
         return state
