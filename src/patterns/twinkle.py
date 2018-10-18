@@ -31,7 +31,7 @@ class Twinkle(PatternBase):
                         self.stars[i][0] = idx
                         self.stars[i][1] = 1
                 else:
-                    self.stars[i][2] = [max(0, c*9/10) for c in x[2]]
+                    self.stars[i][2] = [max(0, int(c*9/10)) for c in x[2]]
             else:
                 # brightening
                 if x[2] == [255, 255, 255]:

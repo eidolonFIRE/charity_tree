@@ -36,7 +36,7 @@ def signal_handler(signal, frame):
 #
 #------------------------------------------------
 done = False
-frame_rate = 100
+frame_rate = 120
 
 def render(strips):
     global done
