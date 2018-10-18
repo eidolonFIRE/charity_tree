@@ -35,7 +35,7 @@ class Strip(object):
 
     def step(self):
         for name, pat in self.pats.items():
-            if pat.state > State.OFF:
+            if pat.state.value > State.OFF.value:
                 pat.step(self.hw)
         self.hw.show()
 
