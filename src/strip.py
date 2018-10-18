@@ -19,9 +19,31 @@ class Strip(object):
         self.length = length
         self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
         self.hw.begin()
-        self.rainbow = Fairy(length)
+        self.rainbow = WaterColor(length)
         self.rainbow.state = State.START
 
+        self.pats = {
+            "off": Off(),
+            "rainboww": Rainbow(),
+            "candycane": Candycane(),
+            "classic": Classic(),
+            "wind": Wind(),
+            "twinkle": Twinkle(),
+            "fairy": Fairy(),
+            "watercolor": WaterColor(),
+        }
+
     def step(self):
-        self.rainbow.state = self.rainbow.step(self.hw)
+        for name, pat in self.pats.items():
+            if pat.state > State.OFF:
+                pat.step(self.hw)
         self.hw.show()
+
+    def solo(self, name):
+        ''' start a pattern, stop all others '''
+        for each in self.pats.keys():
+            if name in each:
+                self.pats[each].state = State.START
+            else:
+                if self.pats[each].state > State.OFF:
+                    self.pats[each].state = State.STOP

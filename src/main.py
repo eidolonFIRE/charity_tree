@@ -13,26 +13,6 @@ from strip import Strip
 #    SERVER
 #
 #------------------------------------------------
-# def start(name):
-#     if name in allPats:
-#         if patterns[allPats.index(name)][1].state != 2:
-#             patterns[allPats.index(name)][0] = 1
-
-
-# def stop(name, offMode):
-#     if name in allPats:
-#         if patterns[allPats.index(name)][1].state != 0:
-#             patterns[allPats.index(name)][0] = 4 if offMode else 3
-
-
-# def solo(name):
-#     offMode = patterns[allPats.index(name)][1].full_stop
-#     for key in allPats:
-#         if key == name:
-#             start(key)
-#         else:
-#             stop(key, offMode)
-
 
 # def serv_recvParser(cli, serv, msg):
 #     print(msg)
@@ -56,18 +36,18 @@ def signal_handler(signal, frame):
 #
 #------------------------------------------------
 done = False
-def render():
+def render(strips):
     global done
 
-    strips = [
-            Strip(300, 18, 10, 0),
-            Strip(300, 13, 11, 1),
-        ]
     while not done:
         for each in strips:
             each.step()
             sleep(1.0 / 100)
 
+
+def cmd_solo(strips, cmd):
+    for each in strips:
+        each.solo(cmd)
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
@@ -77,7 +57,12 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-jobRefresh = Thread(target=render, args=())
+strips = [
+    Strip(300, 18, 10, 0),
+    Strip(300, 13, 11, 1),
+]
+
+jobRefresh = Thread(target=render, args=(strips,))
 jobRefresh.start()
 
 
@@ -87,12 +72,12 @@ while not done:
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
             break
-        # if len(words) > 1:
+        if len(words) > 1:
         #     if words[0] == "start":
         #         start(words[1])
         #     if words[0] == "stop":
         #         stop(words[1])
-        #     if words[0] == "solo":
-        #         solo(words[1])
+            if words[0] == "solo":
+                cmd_solo(strips, words[1])
 
 done = True
