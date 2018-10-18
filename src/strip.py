@@ -23,14 +23,14 @@ class Strip(object):
         self.rainbow.state = State.START
 
         self.pats = {
-            "off": Off(),
-            "rainboww": Rainbow(),
-            "candycane": Candycane(),
-            "classic": Classic(),
-            "wind": Wind(),
-            "twinkle": Twinkle(),
-            "fairy": Fairy(),
-            "watercolor": WaterColor(),
+            "off": Off(length),
+            "rainboww": Rainbow(length),
+            "candycane": Candycane(length),
+            "classic": Classic(length),
+            "wind": Wind(length),
+            "twinkle": Twinkle(length),
+            "fairy": Fairy(length),
+            "watercolor": WaterColor(length),
         }
 
     def step(self):
