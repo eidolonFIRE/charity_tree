@@ -45,5 +45,5 @@ class Strip(object):
             if name in each:
                 self.pats[each].state = State.START
             else:
-                if self.pats[each].state > State.OFF:
+                if self.pats[each].state.value > State.OFF.value:
                     self.pats[each].state = State.STOP
