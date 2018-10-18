@@ -56,12 +56,17 @@ def signal_handler(signal, frame):
 #
 #------------------------------------------------
 done = False
-def render(strip):
+def render():
     global done
 
+    strips = [
+            Strip(300, 18, 10, 0),
+            Strip(300, 13, 11, 1),
+        ]
     while not done:
-        strip.step()
-        sleep(1.0 / 60)
+        for each in strips:
+            each.step()
+            sleep(1.0 / 200)
 
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -72,14 +77,9 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
 
-A = Strip(300, 18, 10, 0)
-B = Strip(300, 13, 11, 1)
+jobRefresh = Thread(target=render, args=())
+jobRefresh.start()
 
-job1 = Thread(target=render, args=(A,))
-job1.start()
-
-job2 = Thread(target=render, args=(B,))
-job2.start()
 
 while not done:
     cmd = input(">")
