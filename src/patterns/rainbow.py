@@ -1,4 +1,4 @@
-from patterns.base import PatternBase
+from patterns.base import PatternBase, State
 from random import shuffle
 from time import time
 from utils import wheel
@@ -19,18 +19,18 @@ class Rainbow(PatternBase):
         for t in range(10):
             if self.i >= len(self.strip_order):
                 self.i = 0
-                if state == 1:
+                if state == State.START:
                     self.buff = strip._led_data
                     print("---rainbow full")
-                    return 2
-            if self.i == 0 and state == 3:
+                    return State.RUNNING
+            if self.i == 0 and state == State.STOP:
                 if self.cleared == 2:
                     self.cleared = 0
                     print("---rainbow done")
-                    return 0
+                    return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            color = wheel((pos + int(time()*30)) % 256) if state != 3 else 0x0
+            color = wheel((pos + int(time()*30)) % 256) if state != State.STOP else 0x0
             self.buff[pos] = color
             self.i += 1
 

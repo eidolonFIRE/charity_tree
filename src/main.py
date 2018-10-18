@@ -66,7 +66,7 @@ def render():
     while not done:
         for each in strips:
             each.step()
-            sleep(1.0 / 200)
+            sleep(1.0 / 100)
 
 
 signal.signal(signal.SIGINT, signal_handler)

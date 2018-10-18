@@ -7,6 +7,8 @@ from patterns.twinkle import Twinkle
 from patterns.fairy import Fairy
 from patterns.water_color import WaterColor
 
+from patterns.base import State
+
 from ledlib.neopixel import Adafruit_NeoPixel, ws
 
 
@@ -18,7 +20,7 @@ class Strip(object):
         self.hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
         self.hw.begin()
         self.rainbow = Fairy(length)
-        self.rainbow.state = 1
+        self.rainbow.state = State.START
 
     def step(self):
         self.rainbow.state = self.rainbow.step(self.hw)
