@@ -36,13 +36,16 @@ def signal_handler(signal, frame):
 #
 #------------------------------------------------
 done = False
+frame_rate = 100
+
 def render(strips):
     global done
+    global frame_rate
 
     while not done:
         for each in strips:
             each.step()
-            sleep(1.0 / 100)
+            sleep(1.0 / frame_rate)
 
 
 def cmd_solo(strips, cmd):
@@ -79,5 +82,7 @@ while not done:
         #         stop(words[1])
             if words[0] == "solo":
                 cmd_solo(strips, words[1])
+            if words[0] == "fps":
+                frame_rate = int(words[1])
 
 done = True
