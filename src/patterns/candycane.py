@@ -1,6 +1,6 @@
 from patterns.base import PatternBase, State
+from utils import *
 from random import random
-from ledlib.neopixel import Color
 
 
 class Candycane(PatternBase):
@@ -12,7 +12,7 @@ class Candycane(PatternBase):
 
     def newStripe(self):
         r = int(random() * 5)+2  # stripe radius
-        return [-r, r, int(random() * 2 + 0.5) + 1, Color(255, 0, 0) if random() < 0.5 else Color(255, 255, 255)]
+        return [-r, r, int(random() * 2 + 0.5) + 1, color(255, 0, 0) if random() < 0.5 else color(255, 255, 255)]
 
     def _step(self, state, strip):
         for i in range(len(self.stripes)):

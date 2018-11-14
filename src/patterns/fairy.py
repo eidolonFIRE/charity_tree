@@ -1,8 +1,7 @@
 from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
-from ledlib.neopixel import Color
-from utils import wheel
+from utils import *
 
 
 class Fairy(PatternBase):
@@ -46,7 +45,7 @@ class Fairy(PatternBase):
                 if self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] >= 0 and self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] < self.numPx:
                     strip._led_data[self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1]] = 0x0
                 if self.wisp[i][0] >= 0 and self.wisp[i][0] < self.numPx:
-                    strip._led_data[self.wisp[i][0]] = Color(255, 255, 255)
+                    strip._led_data[self.wisp[i][0]] = color(255, 255, 255)
                 for x in self.wisp[i][4][0:int(self.wisp[i][3]/3)]:
                     x = x * self.wisp[i][1]
                     if self.wisp[i][0] - x >= 0 and self.wisp[i][0] - x < self.numPx:

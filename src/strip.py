@@ -8,8 +8,18 @@ from patterns.fairy import Fairy
 from patterns.water_color import WaterColor
 
 from patterns.base import State
+import os
 
-from ledlib.neopixel import Adafruit_NeoPixel, ws
+
+# detect OS and load visualization istead of hardware when on PC
+os_type = " ".join(os.uname())
+print("Current OS: %s" % os_type)
+if "Raspbian" in os_type:
+    print("Loading on Raspberry pi, using pwm hardware.")
+    from ledlib.neopixel import Adafruit_NeoPixel, ws
+else:
+    print("Loading on dev PC, using stub visualization.")
+    from stub import Adafruit_NeoPixel, ws
 
 
 class Strip(object):
