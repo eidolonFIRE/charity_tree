@@ -1,7 +1,7 @@
 from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
-from ledlib.neopixel import Color
+from utils import *
 
 
 class Classic(PatternBase):
@@ -18,7 +18,7 @@ class Classic(PatternBase):
         x = self.strip_order[idx] + (int(random() * 100) % 4)
         if random() > 0.05 and idx < len(self.dots):
             x = self.dots[idx][0]
-        strip.setPixelColor(x, Color(220, 180, 50))
+        strip.setPixelColor(x, color(220, 180, 50))
         return [x, int(random() * 100)]
 
     def _step(self, state, strip):

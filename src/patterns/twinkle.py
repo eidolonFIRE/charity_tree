@@ -1,6 +1,6 @@
 from patterns.base import PatternBase, State
 from random import random
-from ledlib.neopixel import Color
+from utils import *
 
 
 class Twinkle(PatternBase):
@@ -38,7 +38,7 @@ class Twinkle(PatternBase):
                     self.stars[i][1] = 0
                 else:
                     self.stars[i][2] = [min(255, int(c + (random()**3)*25)) for c in x[2]]
-            strip.setPixelColor(x[0], Color(*x[2]))
+            strip.setPixelColor(x[0], color(*x[2]))
         if state == State.START:
             if len(self.stars) < 50:
                 if self.loopCount % 4 == 0:

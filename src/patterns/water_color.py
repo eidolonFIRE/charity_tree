@@ -1,8 +1,7 @@
 from patterns.base import PatternBase, State
 from random import random
 from random import shuffle
-
-from utils import wheel
+from utils import *
 
 
 class WaterColor(PatternBase):

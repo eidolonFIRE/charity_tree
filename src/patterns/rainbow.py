@@ -1,7 +1,7 @@
 from patterns.base import PatternBase, State
 from random import shuffle
 from time import time
-from utils import wheel
+from utils import *
 
 
 class Rainbow(PatternBase):
