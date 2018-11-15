@@ -2,8 +2,10 @@ from threading import Thread
 from time import sleep
 import signal
 import configparser
-
+import os.path
 from strip import Strip
+
+done = False
 
 # from websocket_server import WebsocketServer
 
@@ -45,7 +47,11 @@ def cmd_solo(strips, cmd):
 #
 #------------------------------------------------
 config = configparser.ConfigParser()
-config.read('settings.ini')
+if os.path.isfile('settings.ini'):
+    config.read('settings.ini')
+else:
+    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    exit()
 frame_rate = config.getint("global", "frame_rate")
 socket_mode = config.get("global", "mode")
 print("Mode: %s" % socket_mode)
@@ -59,8 +65,8 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 # serv_thread.start()
 
 strips = [
-    Strip(config.get("strips", "strip_a_len"), 18, 10, 0),
-    Strip(config.get("strips", "strip_b_len"), 13, 11, 1),
+    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
+    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
 ]
 
 
@@ -74,7 +80,6 @@ strips = [
 jobRefresh = Thread(target=render, args=(strips,))
 jobRefresh.start()
 
-done = False
 while not done:
     cmd = input(">")
     words = cmd.split()

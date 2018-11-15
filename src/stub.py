@@ -2,12 +2,26 @@ from enum import Enum
 import pygame
 
 
+
+
+pygame.init()
+myDisplay = pygame.display.set_mode((800, 1000), pygame.RESIZABLE)
+pygame.display.set_caption('A*')
+
+myDisplay.fill((10, 10, 10))
+pygame.display.update()
+
+
+def color_to_tuple(color):
+    return ((color >> 16) & 0xff,  (color >> 8) & 0xff, color & 0xff)
+
+
 class ws(Enum):
     WS2811_STRIP_GRB = 0
 
 
 class Adafruit_NeoPixel_stub(object):
-    """docstring for Adafruit_NeoPixel_stub"""
+    """Pygame visualizer for led strip"""
     def __init__(self, length, pin, dma, channel, strip_type):
         super(Adafruit_NeoPixel_stub, self).__init__()
         self.length = length
@@ -15,3 +29,22 @@ class Adafruit_NeoPixel_stub(object):
         self.dma = dma
         self.channel = channel
         self.strip_type = strip_type
+        self._led_data = [0] * length
+
+
+
+    def begin(self):
+        myDisplay.fill((10, 10, 10))
+
+    def show(self):
+        for index, each in enumerate(self._led_data):
+            pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20, 950 - index * 8 + self.channel * 5, 12, 6))
+            if index > 40:
+                pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20 + (index - 39) * 6, 950 - index * 8 + self.channel * 5, 12, 6))
+            if index > 70:
+                pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20 + (index - 68) * 4, 950 - index * 8 + self.channel * 5, 12, 6))
+                pygame.draw.rect(myDisplay, color_to_tuple(each), (375 + self.channel * 20, 950 - index * 8 + self.channel * 5, 12, 6))
+        pygame.display.update()
+
+    def setPixelColor(self, index, color):
+        self._led_data[index] = color

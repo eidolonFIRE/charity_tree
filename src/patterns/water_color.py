@@ -60,7 +60,7 @@ class WaterColor(PatternBase):
                 i = int(random()*1000) % len(self.dots)
                 self.dots[i] = self.newDot()
             # color burst
-            if self.loopCount % 30 == 0:
+            if self.loopCount % 20 == 0:
                 c = wheel(int(random()*1024) % 256)
                 i = int(random()*900) % (self.numPx-4)
                 self.buff[i:i+4] = [c]*4

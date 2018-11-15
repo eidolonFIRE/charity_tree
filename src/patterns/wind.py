@@ -12,12 +12,12 @@ class Wind(PatternBase):
 
     def newWisp(self):
         e = int(random() * 30)+10
-        s = int(random() * (self.numPx-e))
-        return [s, e+s, s, min(1.0, random()+0.5)]
+        s = int(random() * (self.numPx - e - 2))
+        return [s, e + s, s, min(1.0, random()+0.5)]
 
     def _step(self, state, strip):
         for i in range(len(self.wisp)):
-            if self.wisp[i][0] > self.wisp[i][1] + 1:
+            if self.wisp[i][0] >= self.wisp[i][1] + 1:
                 strip._led_data[self.wisp[i][0]] = 0x0
                 strip._led_data[self.wisp[i][0]+1] = 0x0
                 if state != State.STOP:
@@ -37,7 +37,7 @@ class Wind(PatternBase):
                 strip._led_data[self.wisp[i][0]+1] = color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), int(c/4))
 
         if state == State.START:
-            if len(self.wisp) < 20:
+            if len(self.wisp) < 30:
                 if self.loopCount % 6 == 0:
                     self.wisp.append(self.newWisp())
             else:
