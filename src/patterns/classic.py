@@ -37,7 +37,7 @@ class Classic(PatternBase):
             else:
                 self.dots[i][1] -= 1
         if state == State.START:
-            if len(self.dots) < 75:
+            if len(self.dots) < len(self.strip_order):
                 self.dots.append(self.newDot(strip, len(self.dots)))
             else:
                 print("---classic full")

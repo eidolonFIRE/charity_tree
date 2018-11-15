@@ -19,7 +19,7 @@ if "Raspbian" in os_type:
     from ledlib.neopixel import Adafruit_NeoPixel, ws
 else:
     print("Loading on dev PC, using stub visualization.")
-    from stub import Adafruit_NeoPixel, ws
+    from stub import Adafruit_NeoPixel_stub as Adafruit_NeoPixel, ws
 
 
 class Strip(object):
