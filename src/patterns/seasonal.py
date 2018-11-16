@@ -19,7 +19,7 @@ class seasonal(base):
                 self.noise_color[pos] = min(self.max_noise_color, max(0, self.noise_color[pos] + randint(-1,1)))
             # sporatically assign a target brightness for the led
             if randint(0, 20) == 0:
-                self.noise_bri_t = 1.0 - random()**2
+                self.noise_bri_t[pos] = 1.0 - random()**2
             # adjust brightness toward target
             if self.noise_bri[pos] < self.noise_bri_t[pos]:
                 self.noise_bri[pos] = self.noise_bri[pos] + 0.1
