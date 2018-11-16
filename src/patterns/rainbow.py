@@ -30,7 +30,7 @@ class rainbow(base):
                     return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            color = wheel((pos * 2 + int(time()*20)) % 256) if state != State.STOP else 0x0
+            color = wheel(pos * 2 + time() * 20) if state != State.STOP else 0x0
             self.buff[pos] = color
             self.i += 1
 

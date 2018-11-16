@@ -16,11 +16,11 @@ class rainbow2(base):
     def _step(self, state, strip):
         # update sweeping
         if randint(0, 20) == 0:
-            self.scale_t = random() * 7 + 0.2
+            self.scale_t = random() * 20.0 + 0.2
         if randint(0, 20) == 0:
             self.speed_t = (random() - 0.5) * 20.0
         self.speed += (self.speed_t - self.speed) * 0.01
-        self.scale += (self.scale_t - self.scale) * 0.001
+        self.scale += (self.scale_t - self.scale) * 0.002
         self.time += self.speed
 
         # update LEDs
