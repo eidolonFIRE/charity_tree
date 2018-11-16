@@ -44,7 +44,7 @@ class Strip(object):
     def solo(self, name):
         ''' start a pattern, stop all others '''
         for each in self.pats.keys():
-            if name in each:
+            if name == each:
                 self.pats[each].state = State.START
             else:
                 if self.pats[each].state.value > State.OFF.value:
