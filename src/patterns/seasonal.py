@@ -18,19 +18,19 @@ class seasonal(base):
             if randint(0, 3) == 0:
                 self.noise_color[pos] = min(self.max_noise_color, max(0, self.noise_color[pos] + randint(-1,1)))
             # sporatically assign a target brightness for the led
-            if randint(0, 20) == 0:
-                self.noise_bri_t[pos] = 1.0 - random()**2
+            if randint(0, 10) == 0:
+                self.noise_bri_t[pos] = random()
             # adjust brightness toward target
-            self.noise_bri[pos] = self.noise_bri[pos] + (self.noise_bri_t[pos] - self.noise_bri[pos]) * 0.01
+            self.noise_bri[pos] = self.noise_bri[pos] + (self.noise_bri_t[pos] - self.noise_bri[pos]) * 0.1
 
-            base_color = to_color(240,150,100)
+            base_color = mult_color(to_color(240,150,100), self.noise_bri[pos])
             leaf_color = mult_color(wheel(abs((int(time() * 2.0)) % 150 - 75) + self.noise_color[pos]), self.noise_bri[pos])
 
             if state == State.STOP:
                 px_color = 0x0
             elif pos < self.trunk_taper:
                 # blend from base to leaves
-                px_color = blend_color(leaf_color, mult_color(base_color, self.noise_bri[pos]), float(pos) / float(self.trunk_taper))
+                px_color = blend_color(leaf_color, base_color, float(pos) / float(self.trunk_taper))
             else:
                 px_color = leaf_color
 
