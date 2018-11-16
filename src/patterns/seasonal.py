@@ -8,8 +8,8 @@ class seasonal(base):
     def __init__(self, numPixels):
         super(seasonal, self).__init__(numPixels)
         self.full_stop = True
-        self.trunk_end = numPixels / 3
-        self.trunk_taper = 20
+        self.trunk_end = numPixels / 3 - 5
+        self.trunk_taper = 30
         self.noise_color = [0] * numPixels
         self.noise_bri = [1.0] * numPixels
 
@@ -19,7 +19,7 @@ class seasonal(base):
         shuffle(self.strip_order)
 
     def _step(self, state, strip):
-        for t in range(10):
+        for t in range(5):
             if self.i >= len(self.strip_order):
                 self.i = 0
                 if state == State.START:
@@ -32,12 +32,11 @@ class seasonal(base):
             pos = self.strip_order[self.i]
 
             # blend from base to leaves
-            if randint(0, 100) == 0:
-                self.noise_color[pos] = min(20, max(0, self.noise_color[pos] + randint(-1,1)))
-            self.noise_bri[pos] = min(1.0, max(0.0, self.noise_bri[pos] + (random() - 0.49) / 10.0))
+            self.noise_color[pos] = min(30, max(0, self.noise_color[pos] + randint(-1,1)))
+            self.noise_bri[pos] = min(1.0, max(0.0, self.noise_bri[pos] + (random() - 0.499) / 2.0))
 
-            base_color = to_color(250,240,200)
-            leaf_color = mult_color(wheel(abs((int(time() * 2.0)) % 140 - 70) + self.noise_color[pos]), self.noise_bri[pos])
+            base_color = to_color(250,230,180)
+            leaf_color = mult_color(wheel(abs((int(time() * 3.0)) % 160 - 80) + self.noise_color[pos]), self.noise_bri[pos])
 
             if state == State.STOP:
                 px_color = 0x0

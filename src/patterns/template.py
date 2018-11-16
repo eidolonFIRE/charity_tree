@@ -1,8 +1,10 @@
 from patterns.base import base, State
 from random import randint, shuffle
-from utils import wheel
+from utils import to_color, color_to_tuple, mult_color, blend_color, wheel
 
-
+#
+# WARN: Class name must be the same as the file name!
+#
 class template(base):
     def __init__(self, numPixels):
         super(template, self).__init__(numPixels)
@@ -57,6 +59,20 @@ class template(base):
             return State.RUNNING
         elif state == State.STOP:
             return State.OFF
+
+        # === other examples
+
+        # select a random LED
+        index = randint(0, self.numPx - 1) 
+
+        # set that LED to white
+        strip.setPixelColor(index, to_color(255, 255, 255))
+
+        # set that LED to a random color dimmed by half
+        strip.setPixelColor(index, mult_color(wheel(randint(0, 255)), 0.5))
+
+        # set that LED to blend between white and red
+        strip.setPixelColor(index, blend_color(to_color(255, 0, 0), to_color(255, 255, 255), 0.5))
 
         # ===
         # Updated state must always be returned here.
