@@ -10,7 +10,7 @@ class rainbow2(base):
         self.buff = [0] * numPixels
         self.full_stop = True
         self.scale = 1.0
-        self.scale_t
+        self.scale_t = 1.0
         self.time = 0.0
         self.speed = 1.0
         self.speed_t = 1.0
