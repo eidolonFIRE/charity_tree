@@ -13,7 +13,7 @@ class seasonal(base):
         self.noise_color = [0] * numPixels
         self.noise_bri = [1.0] * numPixels
 
-    def clear(self):
+    # def clear(self):
         # self.i = 0
         # self.cleared = 0
         # shuffle(self.strip_order)
