@@ -16,21 +16,19 @@ class rainbow(base):
         shuffle(self.strip_order)
 
     def _step(self, state, strip):
-        for t in range(10):
+        for t in range(20):
             if self.i >= len(self.strip_order):
                 self.i = 0
                 if state == State.START:
                     self.buff = strip._led_data
-                    print("---rainbow full")
                     return State.RUNNING
             if self.i == 0 and state == State.STOP:
                 if self.cleared == 2:
                     self.cleared = 0
-                    print("---rainbow done")
                     return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            color = wheel(pos * 2 + time() * 20) if state != State.STOP else 0x0
+            color = wheel(pos * 2 + time() * 20.0) if state != State.STOP else 0x0
             self.buff[pos] = color
             self.i += 1
 

@@ -29,10 +29,10 @@ def wheel(pos, bri=1):
     """
     pos = int(pos) % 256
     if pos < 85:
-        return to_color(int((pos * 3)*bri), int((255 - pos * 3) * bri), 0)
+        return to_color( pos * 3 *bri, (255 - pos * 3) * bri, 0)
     elif pos < 170:
         pos -= 85
-        return to_color(int((255 - pos * 3) * bri), 0, int(pos * 3 * bri))
+        return to_color((255 - pos * 3) * bri, 0, pos * 3 * bri)
     else:
         pos -= 170
-        return to_color(0, int(pos * 3 * bri), int((255 - pos * 3) * bri))
+        return to_color(0, pos * 3 * bri, (255 - pos * 3) * bri)
