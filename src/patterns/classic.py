@@ -1,13 +1,13 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import random
 from random import shuffle
-from utils import *
+from utils import to_color
 
 
-class Classic(PatternBase):
+class classic(base):
     def __init__(self, numPixels):
         numPixels = numPixels - (numPixels % 4)   # makes sure that numPixels can be divided by 4, e.g, numPixels = 150 wouldn't work 
-        super(Classic, self).__init__(numPixels)
+        super(classic, self).__init__(numPixels)
         self.strip_order = list(range(0, numPixels, 4))
         shuffle(self.strip_order)
 

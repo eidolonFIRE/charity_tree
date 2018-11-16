@@ -1,10 +1,10 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import shuffle
 
 
-class Off(PatternBase):
+class off(base):
     def __init__(self, numPixels):
-        super(Off, self).__init__(numPixels)
+        super(off, self).__init__(numPixels)
 
     def clear(self):
         self.i = 0

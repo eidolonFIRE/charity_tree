@@ -1,11 +1,11 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import random
-from utils import *
+from utils import to_color
 
 
-class Twinkle(PatternBase):
+class twinkle(base):
     def __init__(self, numPixels):
-        super(Twinkle, self).__init__(numPixels)
+        super(twinkle, self).__init__(numPixels)
 
     def clear(self):
         self.stars = []

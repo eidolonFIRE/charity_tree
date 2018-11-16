@@ -11,7 +11,7 @@ class State(Enum):
     HARDSTOP = 4
 
 
-class PatternBase(object):
+class base(object):
     def __init__(self, numPixels):
         self.numPx = numPixels
         self.full_stop = False

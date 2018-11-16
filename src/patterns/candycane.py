@@ -1,11 +1,11 @@
-from patterns.base import PatternBase, State
-from utils import *
+from patterns.base import base, State
+from utils import to_color
 from random import random
 
 
-class Candycane(PatternBase):
+class candycane(base):
     def __init__(self, numPixels):
-        super(Candycane, self).__init__(numPixels)
+        super(candycane, self).__init__(numPixels)
 
     def clear(self):
         self.stripes = []
