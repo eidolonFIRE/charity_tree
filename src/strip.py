@@ -6,6 +6,7 @@ from patterns.wind import Wind
 from patterns.twinkle import Twinkle
 from patterns.fairy import Fairy
 from patterns.water_color import WaterColor
+from patterns.seasonal import Seasonal
 
 from patterns.base import State
 import os
@@ -41,6 +42,7 @@ class Strip(object):
             "twinkle": Twinkle(length),
             "fairy": Fairy(length),
             "watercolor": WaterColor(length),
+            "seasonal": Seasonal(length),
         }
 
     def step(self):

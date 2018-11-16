@@ -1,6 +1,6 @@
 from enum import Enum
 import pygame
-
+from utils import *
 
 
 
@@ -10,10 +10,6 @@ pygame.display.set_caption('A*')
 
 myDisplay.fill((10, 10, 10))
 pygame.display.update()
-
-
-def color_to_tuple(color):
-    return ((color >> 16) & 0xff,  (color >> 8) & 0xff, color & 0xff)
 
 
 class ws(Enum):
