@@ -7,8 +7,8 @@ from utils import to_color, mult_color, blend_color, wheel
 class seasonal(base):
     def __init__(self, numPixels):
         super(seasonal, self).__init__(numPixels)
-        self.trunk_end = numPixels / 5
-        self.trunk_taper = 50
+        self.trunk_end = 10
+        self.trunk_taper = 40
         self.noise_color = [0] * numPixels
         self.noise_bri = [1.0] * numPixels
 
