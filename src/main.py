@@ -33,7 +33,7 @@ def render(strips):
     while not done:
         for each in strips:
             each.step()
-            sleep(1.0 / frame_rate)
+            sleep(0.5 / frame_rate)
 
 
 def cmd_solo(strips, cmd):
