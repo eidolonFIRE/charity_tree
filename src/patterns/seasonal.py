@@ -26,7 +26,7 @@ class seasonal(base):
             base_color = mult_color(to_color(240,150,100), self.noise_bri[pos])
             leaf_color = mult_color(wheel(abs((int(time() * 2.0)) % 150 - 75) + self.noise_color[pos]), self.noise_bri[pos])
 
-            if state == State.STOP:
+            if state != State.RUNNING:
                 px_color = 0x0
             elif pos < self.trunk_taper:
                 # blend from base to leaves
