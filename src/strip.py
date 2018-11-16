@@ -14,7 +14,7 @@ import os
 # detect OS and load visualization istead of hardware when on PC
 os_type = " ".join(os.uname())
 print("Current OS: %s" % os_type)
-if "Raspbian" in os_type:
+if "raspberrypi" in os_type:
     print("Loading on Raspberry pi, using pwm hardware.")
     from ledlib.neopixel import Adafruit_NeoPixel, ws
 else:
