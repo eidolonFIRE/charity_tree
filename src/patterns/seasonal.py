@@ -1,12 +1,12 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import shuffle, randint, random
 from time import time
-from utils import *
+from utils import to_color, mult_color, blend_color, wheel
 
 
-class Seasonal(PatternBase):
+class seasonal(base):
     def __init__(self, numPixels):
-        super(Seasonal, self).__init__(numPixels)
+        super(seasonal, self).__init__(numPixels)
         self.full_stop = True
         self.trunk_end = numPixels / 3
         self.trunk_taper = 20
@@ -47,7 +47,6 @@ class Seasonal(PatternBase):
                 px_color = blend_color(leaf_color, base_color, (pos - self.trunk_end) / float(self.trunk_taper))
             else:
                 px_color = leaf_color
-
 
             strip._led_data[pos] = px_color
             self.i += 1

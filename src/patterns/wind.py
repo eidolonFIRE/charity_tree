@@ -1,11 +1,11 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import random
-from utils import *
+from utils import to_color
 
 
-class Wind(PatternBase):
+class wind(base):
     def __init__(self, numPixels):
-        super(Wind, self).__init__(numPixels)
+        super(wind, self).__init__(numPixels)
 
     def clear(self):
         self.wisp = []

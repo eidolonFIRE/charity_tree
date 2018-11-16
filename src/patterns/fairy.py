@@ -1,12 +1,12 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import random
 from random import shuffle
-from utils import *
+from utils import to_color, wheel
 
 
-class Fairy(PatternBase):
+class fairy(base):
     def __init__(self, numPx):
-        super(Fairy, self).__init__(numPx)
+        super(fairy, self).__init__(numPx)
         self.strip_b = [random() ** 2 for x in range(numPx)]
         self.strip_c = [int(random() * 40) for x in range(numPx)]
 

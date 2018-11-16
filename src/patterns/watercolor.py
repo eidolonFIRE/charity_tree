@@ -1,12 +1,12 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import random
 from random import shuffle
-from utils import *
+from utils import wheel
 
 
-class WaterColor(PatternBase):
+class watercolor(base):
     def __init__(self, numPixels):
-        super(WaterColor, self).__init__(numPixels)
+        super(watercolor, self).__init__(numPixels)
         self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)
         self.buff = [0] * numPixels

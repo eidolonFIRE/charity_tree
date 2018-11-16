@@ -1,12 +1,12 @@
-from patterns.base import PatternBase, State
+from patterns.base import base, State
 from random import shuffle
 from time import time
-from utils import *
+from utils import wheel
 
 
-class Rainbow(PatternBase):
+class rainbow(base):
     def __init__(self, numPixels):
-        super(Rainbow, self).__init__(numPixels)
+        super(rainbow, self).__init__(numPixels)
         self.buff = [0] * numPixels
         self.full_stop = True
 
