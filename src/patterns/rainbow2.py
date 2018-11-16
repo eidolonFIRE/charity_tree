@@ -18,17 +18,16 @@ class rainbow2(base):
     def clear(self):
         self.i = 0
         self.cleared = 0
-        self.start_time = time()
         shuffle(self.strip_order)
 
     def _step(self, state, strip):
         if randint(0, 20) == 0:
-            self.scale_t = random() * 5 + 0.2
+            self.scale_t = random() * 7 + 0.2
         if randint(0, 20) == 0:
             self.start_time = time() + self.start_time
-            self.speed_t = (random() - 0.5) * 10.0
+            self.speed_t = (random() - 0.5) * 20.0
         self.speed += (self.speed_t - self.speed) * 0.01
-        self.scale += (self.scale_t - self.scale) * 0.01
+        self.scale += (self.scale_t - self.scale) * 0.001
 
         self.time += self.speed
 
