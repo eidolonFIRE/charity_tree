@@ -26,9 +26,9 @@ class rainbow2(base):
             self.scale_t = random() * 5 + 0.2
         if randint(0, 20) == 0:
             self.start_time = time() + self.start_time
-            self.speed_t = random() - 0.5
-        self.speed += (self.speed_t - self.speed) * 0.05
-        self.scale += (self.scale_t - self.scale) * 0.05
+            self.speed_t = (random() - 0.5) * 10.0
+        self.speed += (self.speed_t - self.speed) * 0.01
+        self.scale += (self.scale_t - self.scale) * 0.01
 
         self.time += self.speed
 
