@@ -22,9 +22,9 @@ class seasonal(base):
                 self.noise_bri_t = 1.0 - random()**2
             # adjust brightness toward target
             if self.noise_bri[pos] < self.noise_bri_t[pos]:
-                self.noise_bri[pos] += 0.1
+                self.noise_bri[pos] = self.noise_bri[pos] + 0.1
             elif self.noise_bri[pos] > self.noise_bri_t[pos]:
-                self.noise_bri[pos] -= 0.1
+                self.noise_bri[pos] = self.noise_bri[pos] - 0.1
 
             base_color = to_color(240,200,120)
             leaf_color = mult_color(wheel(abs((int(time() * 2.0)) % 150 - 75) + self.noise_color[pos]), self.noise_bri[pos])
