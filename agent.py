@@ -27,13 +27,13 @@ def git_check():
     # check if HEAD is behind remote master
     #     git rev-list HEAD...origin/master --count
     print("Checking git for updates...")
-    git = Popen(["git", "rev-list", "HEAD...origin/master", "--count"], stdout=PIPE)
+    git = Popen(["git", "fetch", "--dry-run"], stdout=PIPE, stderr=PIPE)
     (output, err) = git.communicate()
-    print("\t Result: %s" % output)
+    print("\t Result: ", output, err)
     if err:
         print("Error checking git for updates.")
     git.wait()
-    return int(output)
+    return True if len(output) > 2 else False
 
 
 def thread_run_target():
@@ -42,7 +42,7 @@ def thread_run_target():
     global force_shutdown
 
     while not global_done:
-        main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE)
+        main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE)
         sleep(2)
         main.communicate("rainbow\n")
         alive = True
