@@ -3,12 +3,21 @@
 -----------------------
 
 # Setup
+
+## Linux
 - Install pip for python 3 `sudo apt install python3-pip`
 - Install pygame for python 3 `python3 -m pip install -U pygame --user`
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
+## OSX
+- Install python3 `brew install python3`
+- Install pygame `pip3 install pygame`
+- Create settings file. `cp src/settings.ini.sample src/settings.ini`
+
 ## Setup for Raspberry Pi
+- Install python3 `sudo apt install python3`
 - clone and install this repo next to `charity_tree`. https://github.com/jgarff/rpi_ws281x.git
+- Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
 
 # Running
