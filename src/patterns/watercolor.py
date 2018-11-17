@@ -15,7 +15,7 @@ class watercolor(base):
         self.i = 0
         self.cleared = 0
         self.baseC = int(random()*1024) % 256
-        self.dots = []  # [self.newDot() for x in range(15)]
+        self.dots = []
 
     def newDot(self):
         return [randint(0, self.numPx - 1), wheel(self.baseC + random() * 30, random())]
@@ -24,7 +24,7 @@ class watercolor(base):
         if state == State.START:
             self.buff = strip._led_data
             return State.RUNNING
-        for t in range(40):
+        for t in range(30):
             if self.i >= len(self.strip_order):
                 self.i = 0
                 shuffle(self.strip_order)
@@ -54,7 +54,7 @@ class watercolor(base):
                 self.dots.append(self.newDot())
             # base color
             if self.loopCount % 10 == 0:
-                i = randint(0, self.numPx - 1)
+                i = randint(0, len(self.dots) - 1)
                 self.dots[i] = self.newDot()
             # color burst
             if self.loopCount % 20 == 0:
