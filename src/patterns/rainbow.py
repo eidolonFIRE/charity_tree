@@ -16,7 +16,7 @@ class rainbow(base):
         shuffle(self.strip_order)
 
     def _step(self, state, strip):
-        for t in range(20):
+        for t in range(10):
             if self.i >= len(self.strip_order):
                 self.i = 0
                 if state == State.START:

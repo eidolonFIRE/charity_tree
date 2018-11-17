@@ -11,11 +11,11 @@ class seasonal(base):
         self.noise_color = [0] * numPixels
         self.noise_bri = [1.0] * numPixels
         self.noise_bri_t = [1.0] * numPixels
-        self.max_noise_color = 20
+        self.max_noise_color = 10
 
     def _step(self, state, strip):
         for pos in range(self.numPx):
-            if randint(0, 3) == 0:
+            if randint(0, 15) == 0:
                 self.noise_color[pos] = min(self.max_noise_color, max(0, self.noise_color[pos] + randint(-1,1)))
             # sporatically assign a target brightness for the led
             if randint(0, 20) == 0:
@@ -23,8 +23,8 @@ class seasonal(base):
             # adjust brightness toward target
             self.noise_bri[pos] = self.noise_bri[pos] + (self.noise_bri_t[pos] - self.noise_bri[pos]) * 0.05
 
-            base_color = mult_color(to_color(240,150,100), self.noise_bri[pos])
-            leaf_color = wheel(abs((int(time() * 2.0)) % 150 - 75) + self.noise_color[pos], self.noise_bri[pos])
+            base_color = mult_color(to_color(220, 200, 80), self.noise_bri[pos])
+            leaf_color = wheelt(abs((time() * 1.0) % 150 - 75) + self.noise_color[pos], self.noise_bri[pos])
 
             if state != State.RUNNING:
                 px_color = 0x0
