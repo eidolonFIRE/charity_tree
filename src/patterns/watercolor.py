@@ -8,7 +8,6 @@ class watercolor(base):
         super(watercolor, self).__init__(numPixels)
         self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)
-        self.buff = [0] * numPixels
         self.full_stop = True
 
     def clear(self):
@@ -22,7 +21,6 @@ class watercolor(base):
 
     def _step(self, state, strip):
         if state == State.START:
-            self.buff = strip._led_data
             return State.RUNNING
         for t in range(30):
             if self.i >= len(self.strip_order):
@@ -35,22 +33,22 @@ class watercolor(base):
                 self.cleared += 1
             pos = self.strip_order[self.i]
             if state != State.STOP:
-                # c0 = self.buff[pos-1]
-                # c1 = self.buff[pos]
-                # c2 = self.buff[(pos+1)%self.numPx]
+                # c0 = strip._led_data[pos-1]
+                # c1 = strip._led_data[pos]
+                # c2 = strip._led_data[(pos+1)%self.numPx]
                 # c = ((((c0&0xff0000)+(c2&0xff0000))>>1) & 0xff0000) |\
                 #     ((((c0&  0xff00)+(c2&  0xff00))>>1) & 0xff00) |\
                 #     ((((c0&    0xff)+(c2&    0xff))>>1) & 0xff)
-                self.buff[pos] = blend_color(self.buff[pos-1], self.buff[(pos+1)%self.numPx], 0.5)
+                strip._led_data[pos] = blend_color(strip._led_data[pos-1], strip._led_data[(pos+1)%self.numPx], 0.5)
             else:
-                self.buff[pos] = 0
+                strip._led_data[pos] = 0
             self.i += 1
         if state != State.STOP:
             # update base dots
             for t in self.dots:
-                self.buff[t[0]] = t[1]
+                strip._led_data[t[0]] = t[1]
             # add dots
-            if len(self.dots) < 10 and self.loopCount % 10 == 0:
+            if len(self.dots) < 6 and self.loopCount % 10 == 0:
                 self.dots.append(self.newDot())
             # base color
             if self.loopCount % 10 == 0:
@@ -60,7 +58,7 @@ class watercolor(base):
             if self.loopCount % 20 == 0:
                 c = wheel(randint(0, 255))
                 i = randint(0, self.numPx - 5)
-                self.buff[i:i+4] = [c]*4
+                strip._led_data[i:i+4] = [c]*4
             # change base color
             if self.loopCount % 100 == 0 and randint(0, 9) == 0:
                 self.baseC = randint(0, 255)
