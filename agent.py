@@ -53,7 +53,7 @@ def thread_run_target():
             if force_restart or force_shutdown:
                 # request target shutdown
                 print("Target stop requested.")
-                (output, err) = main.communicate(input=b'exit')
+                (output, err) = main.communicate(input=b'exit\n')
                 # if err:
                 #     print("Timeout waiting on \"exit\" command. Proceeding.")
                 alive = False
@@ -80,6 +80,7 @@ print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 
 while not global_done:
     if git_check():
+        print("Update needed.")
         force_restart = True
 
     # wait 1 minute
