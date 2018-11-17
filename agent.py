@@ -44,7 +44,7 @@ def thread_run_target():
     while not global_done:
         main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE)
         sleep(2)
-        main.communicate("rainbow\n")
+        main.communicate(input=b'rainbow\n')
         alive = True
         while alive:
             # check if target is alive every 10 seconds
@@ -58,7 +58,7 @@ def thread_run_target():
             if force_restart or force_shutdown:
                 # request target shutdown
                 print("Target stop requested.")
-                (output, err) = main.communicate(input="exit")
+                (output, err) = main.communicate(input=b'exit')
                 if err:
                     print("Timeout waiting on \"exit\" command. Proceeding.")
                 alive = False
