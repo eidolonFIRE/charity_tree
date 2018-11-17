@@ -68,7 +68,7 @@ jobRefresh = Thread(target=render, args=(strips,))
 jobRefresh.start()
 
 while not done:
-    cmd = input(">")
+    cmd = input("")
     words = cmd.split()
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
