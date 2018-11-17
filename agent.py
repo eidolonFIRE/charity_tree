@@ -17,9 +17,6 @@ def git_pull():
     # run the git update
     print("Git Pull!")
     pull = Popen(["git", "pull"], stdout=PIPE)
-    (output, err) = pull.communicate()
-    if err:
-        print("Error during git pull.")
     pull.wait()
 
 
@@ -29,11 +26,9 @@ def git_check():
     print("Checking git for updates...")
     git = Popen(["git", "fetch", "--dry-run"], stdout=PIPE, stderr=PIPE)
     (output, err) = git.communicate()
-    print("\t Result: ", output, err)
-    if err:
-        print("Error checking git for updates.")
+    # print("\t Result: ", output, err)
     git.wait()
-    return True if len(output) > 2 else False
+    return True if len(err) > 2 else False
 
 
 def thread_run_target():
@@ -42,25 +37,25 @@ def thread_run_target():
     global force_shutdown
 
     while not global_done:
-        main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE)
+        main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
         sleep(2)
         main.communicate(input=b'rainbow\n')
         alive = True
         while alive:
             # check if target is alive every 10 seconds
             sleep(5)
-            (output, err) = main.communicate()
-            if err:
-                print("Target crashed!")
-                alive = False
+            # (output, err) = main.communicate()
+            # if err:
+            #     print("Target crashed!")
+            #     alive = False
 
             # watch for restart flag
             if force_restart or force_shutdown:
                 # request target shutdown
                 print("Target stop requested.")
                 (output, err) = main.communicate(input=b'exit')
-                if err:
-                    print("Timeout waiting on \"exit\" command. Proceeding.")
+                # if err:
+                #     print("Timeout waiting on \"exit\" command. Proceeding.")
                 alive = False
 
         main.wait()
