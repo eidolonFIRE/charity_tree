@@ -40,7 +40,8 @@ def thread_run_target():
         main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
         sleep(2)
         main.stdin.write(b'rainbow\n')
-        main.stdin.close()
+        main.stdin.flush()
+        # main.stdin.
         alive = True
         while alive:
             # check if target is alive every 10 seconds
@@ -51,7 +52,8 @@ def thread_run_target():
                 # request target shutdown
                 print("Target stop requested.")
                 main.stdin.write(b'exit\n')
-                main.stdin.close()
+                main.stdin.flush()
+                # main.stdin.close()
                 alive = False
 
         main.wait()
