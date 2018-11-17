@@ -22,16 +22,20 @@ def blend_color(A, B, ratio):
     ar, ag, ab = color_to_tuple(A)
     br, bg, bb = color_to_tuple(B)
     i_ratio = 1.0 - ratio
-    return to_color(ar * ratio + br * i_ratio, ag * ratio + bg * i_ratio, ab * ratio + bb * i_ratio)
+    return to_color(
+        ar * ratio + br * i_ratio,
+        ag * ratio + bg * i_ratio,
+        ab * ratio + bb * i_ratio)
 
 def wheel(pos, bri=1):
     """ Generate rainbow colors across 0-255 positions.
     """
+    pos = int(pos) % 256
     if pos < 85:
-        return to_color(int((pos * 3)*bri), int((255 - pos * 3) * bri), 0)
+        return to_color( pos * 3 *bri, (255 - pos * 3) * bri, 0)
     elif pos < 170:
         pos -= 85
-        return to_color(int((255 - pos * 3) * bri), 0, int(pos * 3 * bri))
+        return to_color((255 - pos * 3) * bri, 0, pos * 3 * bri)
     else:
         pos -= 170
-        return to_color(0, int(pos * 3 * bri), int((255 - pos * 3) * bri))
+        return to_color(0, pos * 3 * bri, (255 - pos * 3) * bri)

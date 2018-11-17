@@ -21,16 +21,14 @@ class rainbow(base):
                 self.i = 0
                 if state == State.START:
                     self.buff = strip._led_data
-                    print("---rainbow full")
                     return State.RUNNING
             if self.i == 0 and state == State.STOP:
                 if self.cleared == 2:
                     self.cleared = 0
-                    print("---rainbow done")
                     return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            color = wheel((pos + int(time()*30)) % 256) if state != State.STOP else 0x0
+            color = wheel(pos * 2 + time() * 20.0) if state != State.STOP else 0x0
             self.buff[pos] = color
             self.i += 1
 
