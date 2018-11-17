@@ -24,7 +24,7 @@ class seasonal(base):
             self.noise_bri[pos] = self.noise_bri[pos] + (self.noise_bri_t[pos] - self.noise_bri[pos]) * 0.05
 
             base_color = mult_color(to_color(220, 200, 80), self.noise_bri[pos])
-            leaf_color = wheelt(abs((time() * 1.0) % 150 - 75) + self.noise_color[pos], self.noise_bri[pos])
+            leaf_color = wheel(abs((time() * 1.0) % 150 - 75) + self.noise_color[pos], self.noise_bri[pos])
 
             if state != State.RUNNING:
                 px_color = 0x0
