@@ -23,10 +23,9 @@
 # Running
 It automatically detects if you are not on raspberry pi and will launch
 pygame visualizer instead for pattern development and testing. 
-If you're running on raspberryPi, you will need to `sudo`!
 
-- `cd src`
-- `python3 main.py`
+- Raspberry pi: `./run_pi.sh`
+- Other: `./run.sh`
 
 
 # Commands
