@@ -41,7 +41,7 @@ class twinkle(base):
                     self.stars[i][2] = [min(255, int(c + (random()**3)*25)) for c in x[2]]
             strip.setPixelColor(x[0], to_color(*x[2]))
         if state == State.START:
-            if len(self.stars) < num_stars:
+            if len(self.stars) < self.num_stars:
                 if self.loopCount % 4 == 0:
                     self.stars.append([int(random() * self.numPx), 1, [0, 0, 0]])
             else:
