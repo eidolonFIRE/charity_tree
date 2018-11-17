@@ -26,7 +26,7 @@ class rainbow2(base):
         # update LEDs
         for pos in range(self.numPx):
             color = wheel(pos * self.scale + self.time) if state != State.STOP else 0x0
-            strip._led_data[pos] = color if state == State.RUNNING else to_color(0, 0, 0)
+            strip._led_data[pos] = color if state == State.RUNNING else 0
 
         # update state machine
         if state == State.START:
