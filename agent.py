@@ -10,10 +10,12 @@ import signal
 
 global_done = False
 force_restart = False
+force_shutdown = False
 
 
 def git_pull():
     # run the git update
+    print("Git Pull!")
     pull = Popen(["git", "pull"])
     (output, err) = pull.communicate()
     if err:
@@ -23,6 +25,8 @@ def git_pull():
 
 def git_check():
     # check if HEAD is behind remote master
+    #     git rev-list HEAD...origin/master --count
+    print("Checking git for updates...")
     git = Popen(["git", "rev-list", "HEAD...origin/master", "--count"], stdout=PIPE)
     (output, err) = git.communicate()
     if err:
@@ -34,23 +38,24 @@ def git_check():
 def thread_run_target():
     global global_done
     global force_restart
+    global force_shutdown
 
     while not global_done:
         main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE)
         alive = True
         while alive:
             # check if target is alive every 10 seconds
-            sleep(10)
+            sleep(5)
             (output, err) = main.communicate()
             if err:
                 print("Target crashed!")
                 alive = False
 
             # watch for restart flag
-            if force_restart:
+            if force_restart or force_shutdown:
                 # request target shutdown
-                print("Restart requested.")
-                (output, err) = main.communicate("exit", 10)
+                print("Target stop requested.")
+                (output, err) = main.communicate(input="exit")
                 if err:
                     print("Timeout waiting on \"exit\" command. Proceeding.")
                 alive = False
@@ -60,10 +65,12 @@ def thread_run_target():
         if force_restart:
             git_pull()
             force_restart = False
+            force_shutdown = False
 
 
 def signal_handler(signal, frame):
     global global_done
+    print("- INTERUPT - HALTING -")
     global_done = True
 
 
@@ -78,7 +85,7 @@ while not global_done:
         force_restart = True
 
     # wait 1 minute
-    sleep(30)
+    sleep(20)
 
-force_restart = True
+force_shutdown = True
 global_done = True
