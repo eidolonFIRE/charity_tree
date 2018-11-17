@@ -16,7 +16,7 @@ force_shutdown = False
 def git_pull():
     # run the git update
     print("Pulling updates.")
-    pull = Popen(["git", "pull"], stdout=PIPE)
+    pull = Popen(["git", "pull"], stdout=PIPE, stderr=PIPE)
     pull.wait()
 
 
@@ -37,8 +37,8 @@ def thread_run_target():
     global force_shutdown
 
     while not global_done:
-        main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
-        sleep(2)
+        main = Popen(["sudo", "python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        sleep(10)
         main.stdin.write(b'rainbow\n')
         main.stdin.flush()
         # main.stdin.
@@ -81,7 +81,7 @@ while not global_done:
         force_restart = True
 
     # wait 1 minute
-    sleep(20)
+    sleep(60)
 
 force_shutdown = True
 global_done = True
