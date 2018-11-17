@@ -44,7 +44,6 @@ def thread_run_target():
         while alive:
             # check if target is alive every 10 seconds
             sleep(5)
-            (output, err) = main.communicate()
 
             # watch for restart flag
             if force_restart or force_shutdown:
