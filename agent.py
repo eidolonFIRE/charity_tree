@@ -27,8 +27,9 @@ def git_check():
     # check if HEAD is behind remote master
     #     git rev-list HEAD...origin/master --count
     print("Checking git for updates...")
-    git = Popen(["git", "rev-list", "HEAD...master", "--count"], stdout=PIPE)
+    git = Popen(["git", "rev-list", "HEAD...origin/master", "--count"], stdout=PIPE)
     (output, err) = git.communicate()
+    print("\t Result: %s" % output)
     if err:
         print("Error checking git for updates.")
     git.wait()
