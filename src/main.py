@@ -1,6 +1,5 @@
 from threading import Thread
 from time import sleep
-import signal
 import configparser
 import os.path
 from strip import Strip
@@ -13,17 +12,6 @@ done = False
 # def serv_recvParser(cli, serv, msg):
 #     print(msg)
 #     solo(msg)
-
-
-def signal_handler(signal, frame):
-    # global serv_thread
-    # global server
-    # print("Exiting...")
-    # server.server_close()
-    # serv_thread.join()
-    # sys.exit(0)
-    global done
-    done = True
 
 
 def render(strips):
@@ -56,13 +44,12 @@ frame_rate = config.getint("global", "frame_rate")
 socket_mode = config.get("global", "mode")
 print("Mode: %s" % socket_mode)
 
-signal.signal(signal.SIGINT, signal_handler)
-print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
-
 # server = WebsocketServer(12000, host="0.0.0.0")
 # server.set_fn_message_received(serv_recvParser)
 # serv_thread = Thread(target=server.run_forever, args=())
 # serv_thread.start()
+
+print("Use cmd \"exit\" to close.")
 
 strips = [
     Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
@@ -81,7 +68,7 @@ jobRefresh = Thread(target=render, args=(strips,))
 jobRefresh.start()
 
 while not done:
-    cmd = input(">")
+    cmd = input("")
     words = cmd.split()
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
