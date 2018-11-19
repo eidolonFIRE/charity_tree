@@ -1,11 +1,8 @@
 from enum import Enum
 import pygame
-from utils import *
-
-
 
 pygame.init()
-myDisplay = pygame.display.set_mode((800, 1000), pygame.RESIZABLE)
+myDisplay = pygame.display.set_mode((700, 900), pygame.RESIZABLE)
 pygame.display.set_caption('A*')
 
 myDisplay.fill((10, 10, 10))
@@ -27,19 +24,21 @@ class Adafruit_NeoPixel_stub(object):
         self.strip_type = strip_type
         self._led_data = [0] * length
 
-
-
     def begin(self):
         myDisplay.fill((10, 10, 10))
 
+    @staticmethod
+    def color_to_tuple(color):
+        return (color >> 16, (color >> 8) & 0xff, color & 0xff)
+
     def show(self):
         for index, each in enumerate(self._led_data):
-            pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20, 950 - index * 8 + self.channel * 5, 20 - index / 8, 6))
+            pygame.draw.rect(myDisplay, Adafruit_NeoPixel_stub.color_to_tuple(each), (200 + self.channel * 20, 850 - index * 8 + self.channel * 5, 20 - index / 8, 6))
             if index > 40:
-                pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20 + (index - 39) * 6, 950 - index * 8 + self.channel * 5, 20 - index / 8, 6))
+                pygame.draw.rect(myDisplay, Adafruit_NeoPixel_stub.color_to_tuple(each), (200 + self.channel * 20 + (index - 39) * 6, 850 - index * 8 + self.channel * 5, 20 - index / 8, 6))
             if index > 70:
-                pygame.draw.rect(myDisplay, color_to_tuple(each), (200 + self.channel * 20 + (index - 68) * 4, 950 - index * 8 + self.channel * 5, 20 - index / 8, 6))
-                pygame.draw.rect(myDisplay, color_to_tuple(each), (375 + self.channel * 20, 950 - index * 8 + self.channel * 5, 20 - index / 8, 6))
+                pygame.draw.rect(myDisplay, Adafruit_NeoPixel_stub.color_to_tuple(each), (200 + self.channel * 20 + (index - 68) * 4, 850 - index * 8 + self.channel * 5, 20 - index / 8, 6))
+                pygame.draw.rect(myDisplay, Adafruit_NeoPixel_stub.color_to_tuple(each), (375 + self.channel * 20, 850 - index * 8 + self.channel * 5, 20 - index / 8, 6))
         pygame.display.update()
 
     def setPixelColor(self, index, color):

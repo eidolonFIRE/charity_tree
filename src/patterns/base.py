@@ -12,18 +12,16 @@ class State(Enum):
 
 
 class base(object):
-    def __init__(self, numPixels):
-        self.numPx = numPixels
-        self.full_stop = False
-        self.state = State.OFF
+    def __init__(self, strip_length):
+        self.len = strip_length
+        self.state = State.START
+        self.one_shot = False
         self.loopCount = 0
-        self.strip_order = list(range(numPixels))
-        shuffle(self.strip_order)
         self.clear()
 
     def clear(self):
         pass
 
-    def step(self, strip):
+    def step(self, leds):
         self.loopCount += 1
-        self.state = self._step(self.state, strip)
+        self.state = self._step(self.state, leds)
