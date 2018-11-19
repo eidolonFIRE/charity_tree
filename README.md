@@ -6,6 +6,7 @@
 
 ## Linux
 - Install pip for python 3 `sudo apt install python3-pip`
+- Install numpy `python3 -m pip install numpy`
 - Install pygame for python 3 `python3 -m pip install -U pygame --user`
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
@@ -23,10 +24,6 @@
 # Running
 It automatically detects if you are not on raspberry pi and will launch
 pygame visualizer instead for pattern development and testing. 
-<<<<<<< HEAD
-=======
-If you're running on raspberryPi, you will need to `sudo`.
->>>>>>> master
 
 - Raspberry pi: `./python3 agent.py`
 - Other: `./run.sh`

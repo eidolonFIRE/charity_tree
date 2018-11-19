@@ -6,14 +6,36 @@ def to_color(red, green, blue, white=0):
     """
     return (int(white) << 24) | (int(red) << 16) | (int(green) << 8) | int(blue)
 
+
 def color_to_tuple(color):
     return ((color >> 16) & 0xff,  (color >> 8) & 0xff, color & 0xff)
+
+
+def get_bri(color):
+    """ Return brightness of color 0. to 1.
+    """
+    r, g, b = color_to_tuple(color)
+    return max(r, g, b) / 255.0
+
+
+# def get_wheel_color(color):
+#     """ Return color position on wheel
+#     """
+#     r, g, b = color_to_tuple(color)
+#     largest = max(r, g, b)
+#     scale = 255 / largest
+#     r = r * scale
+#     g = g * scale
+#     b = b * scale
+    # WIP
+
 
 def mult_color(color, bri):
     """ Multiply a color by a brightness factor  0. to 1.
     """
     r, g, b = color_to_tuple(color)
     return to_color(r * bri, g * bri, b * bri)
+
 
 def blend_color(A, B, ratio):
     """ Weighted average of two colors.
@@ -27,12 +49,13 @@ def blend_color(A, B, ratio):
         ag * ratio + bg * i_ratio,
         ab * ratio + bb * i_ratio)
 
+
 def wheel(pos, bri=1):
     """ Generate rainbow colors across 0-255 positions.
     """
     pos = int(pos) % 256
     if pos < 85:
-        return to_color( pos * 3 *bri, (255 - pos * 3) * bri, 0)
+        return to_color(pos * 3 * bri, (255 - pos * 3) * bri, 0)
     elif pos < 170:
         pos -= 85
         return to_color((255 - pos * 3) * bri, 0, pos * 3 * bri)

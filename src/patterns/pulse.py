@@ -1,44 +1,55 @@
 from patterns.base import base, State
-from random import random
-from utils import to_color
+from random import randint
+from utils import wheel, mult_color
+
+
+class Wave():
+    def __init__(self, start, end, color, speed, width):
+        self.pos = start
+        self.end = end
+        self.color = color
+        self.speed = speed
+        self.width = width
 
 
 class pulse(base):
     def __init__(self, numPixels):
         super(pulse, self).__init__(numPixels)
+        self.num_waves = 4
+        self.one_shot = True
 
     def clear(self):
-        self.wisp = []
+        self.waves = []
+        self.spawned = 0
 
-    def newWisp(self):
-        e = int(random() * 30)+10
-        s = int(random() * (self.numPx - e - 2))
-        return [s, e + s, s, min(1.0, random()+0.5)]
+    def new_wave(self):
+        return Wave(
+            start=0,
+            end=min(self.numPx - 1, randint(30, self.numPx - 1)),
+            color=wheel(randint(0, 255)),
+            speed=randint(1, 3),
+            width=randint(5, 15))
 
     def _step(self, state, strip):
-        for i in range(len(self.wisp)):
-            if self.wisp[i][0] >= self.wisp[i][1] + 1:
-                strip._led_data[self.wisp[i][0]] = 0x0
-                strip._led_data[self.wisp[i][0]+1] = 0x0
-                if state != State.STOP:
-                    self.wisp[i] = self.newWisp()
-                else:
-                    del self.wisp[i]
-                    if len(self.wisp) == 0:
-                        return State.OFF
-                    break
-            else:
-                c = max(0, int(255.0 * ((0.5 - abs(((1.0 * self.wisp[i][1] - self.wisp[i][0])/(1.0 * self.wisp[i][1] - self.wisp[i][2])) - 0.5))*2.0)**4.0))
-                strip._led_data[self.wisp[i][0] - 1] = 0x0
-                strip._led_data[self.wisp[i][0]] = to_color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), int(c/4))
-                self.wisp[i][0] += 1
-                strip._led_data[self.wisp[i][0]] = to_color(int(c * self.wisp[i][3]), int(c * self.wisp[i][3]), c)
-                strip._led_data[self.wisp[i][0]+1] = to_color(int(c * self.wisp[i][3]/4), int(c * self.wisp[i][3]/4), int(c/4))
+        # fade whole strip
+        for idx in range(0, self.numPx):
+            strip._led_data[idx] = mult_color(strip._led_data[idx], 0.9)
+
+        # render pulses
+        for each in self.waves:
+            for x in range(each.speed):
+                strip._led_data[min(self.numPx - 1, each.pos + x)] = each.color
+            each.pos += each.speed
+            if each.pos >= each.end:
+                self.waves.remove(each)
 
         if state == State.START:
-            if len(self.wisp) < 30:
-                if self.loopCount % 6 == 0:
-                    self.wisp.append(self.newWisp())
+            if self.spawned < self.num_waves:
+                self.spawned += 1
+                self.waves.append(self.new_wave())
             else:
-                return State.RUNNING
+                state = State.STOP
+        elif state == State.STOP:
+            if len(self.waves) == 0:
+                state = State.OFF
         return state

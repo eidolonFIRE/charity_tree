@@ -3,6 +3,7 @@ from time import sleep
 import configparser
 import os.path
 from strip import Strip
+from patterns.base import State
 
 done = False
 
@@ -27,6 +28,16 @@ def render(strips):
 def cmd_solo(strips, cmd):
     for each in strips:
         each.solo(cmd)
+
+
+def cmd_list(strips):
+    print("")
+    for index, strip in enumerate(strips):
+        print("\n> Strip %d:" % index)
+        for name, pat in strip.pats.items():
+            if pat.state != State.OFF:
+                print("    {:15} : {:10}".format(name, pat.state.name))
+    print("")
 
 
 #================================================
@@ -56,6 +67,8 @@ strips = [
     Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
 ]
 
+auto_list = True
+
 
 #================================================
 #
@@ -78,7 +91,16 @@ while not done:
                 frame_rate = int(words[1])
             else:
                 print("Please provide a frame rate.\n    Example: \">fps 120\"")
+        elif words[0] == "list":
+            if len(words) > 1 and words[1] == "auto":
+                if auto_list:
+                    auto_list = False
+                else:
+                    auto_list = True
+            cmd_list(strips)
         else:
             cmd_solo(strips, words[0])
+    if auto_list:
+        cmd_list(strips)
 
 done = True

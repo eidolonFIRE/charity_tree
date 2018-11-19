@@ -16,6 +16,7 @@ class base(object):
         self.numPx = numPixels
         self.full_stop = False
         self.state = State.OFF
+        self.one_shot = False
         self.loopCount = 0
         self.strip_order = list(range(numPixels))
         shuffle(self.strip_order)
