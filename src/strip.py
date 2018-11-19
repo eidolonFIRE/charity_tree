@@ -1,7 +1,7 @@
 import importlib
 from patterns.base import State
 import os
-from color import Color
+from color_utils import color_to_int, to_color
 
 # detect and load patterns
 pattern_files = [f.replace(".py", "") for f in os.listdir("patterns") if os.path.isfile(os.path.join("patterns", f))]
@@ -23,51 +23,54 @@ else:
     from stub import Adafruit_NeoPixel_stub as Adafruit_NeoPixel, ws
 
 
-class HwInter(object):
+class LedInterface(object):
     """ Hardware interface
     """
     def __init__(self, length, pin, dma, channel):
-        super(HwInter, self).__init__()
+        super(LedInterface, self).__init__()
         self._hw = Adafruit_NeoPixel(length, pin=pin, dma=dma, channel=channel, strip_type=ws.WS2811_STRIP_GRB)
         self._hw.begin()
         self.length = length
-        self.buffer = [Color()] * length
+        self.buffer = [to_color()] * length
 
     def flush(self):
         """ Flush buffer to strip
         """
         for x in range(self.length):
-            self._hw._led_data[x] = self.buffer[x].to_int()
+            self._hw._led_data[x] = color_to_int(self.buffer[x])
         self._hw.show()
+
+    def __getitem__(self, idx):
+        return self.buffer[idx]
+
+    def __setitem__(self, idx, value):
+        self.buffer[idx] = value
 
 
 class Strip(object):
     """   """
     def __init__(self, length, pin, dma, channel):
         super(Strip, self).__init__()
-        self.length = length
-        self.hw = HwInter(length, pin, dma, channel)
-        self.pats = {}
-
-        # new instance of each pattern
-        for key, value in pattern_classes.items():
-            self.pats[key] = value(length)
+        self.leds = LedInterface(length, pin, dma, channel)
+        self.active_pats = []
 
     def step(self):
-        for name, pat in self.pats.items():
-            if pat.state.value > State.OFF.value:
-                pat.step(self.hw)
-        self.hw.flush()
+        for each in self.active_pats:
+            if each.state == State.OFF:
+                del each
+            elif each.state.value > State.OFF.value:
+                each.step(self.leds)
+        self.leds.flush()
 
-    def solo(self, name):
+    def start_pattern(self, name):
         ''' start a pattern, stop all others '''
-        if name in self.pats.keys():
+        if name in pattern_classes.keys():
             # start the desired pattern
-            self.pats[name].state = State.START
-            if not self.pats[name].one_shot:
+            self.active_pats.append(pattern_classes[name](self.leds.length))
+            if not self.active_pats[-1].one_shot:
                 # stop all other patterns
-                for each in self.pats.keys():
-                    if name != each and self.pats[each].state.value > State.OFF.value:
-                        self.pats[each].state = State.STOP
+                for each in self.active_pats:
+                    if name != each.__class__.__name__ and each.state.value > State.OFF.value:
+                        each.state = State.STOP
         else:
             print("Unknown pattern \"%s\"" % name)

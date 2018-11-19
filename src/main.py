@@ -27,16 +27,16 @@ def render(strips):
 
 def cmd_solo(strips, cmd):
     for each in strips:
-        each.solo(cmd)
+        each.start_pattern(cmd)
 
 
 def cmd_list(strips):
     print("")
     for index, strip in enumerate(strips):
         print("\n> Strip %d:" % index)
-        for name, pat in strip.pats.items():
-            if pat.state != State.OFF:
-                print("    {:15} : {:10}".format(name, pat.state.name))
+        for each in strip.active_pats:
+            if each.state != State.OFF:
+                print("    {:15} : {:10}".format(each.__class__.__name__, each.state.name))
     print("")
 
 

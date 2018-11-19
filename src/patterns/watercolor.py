@@ -1,27 +1,27 @@
 from patterns.base import base, State
 from random import random, randint, shuffle
-from utils import wheel, blend_color
+from color_utils import color_wheel
 
 
 class watercolor(base):
-    def __init__(self, numPixels):
-        super(watercolor, self).__init__(numPixels)
-        self.strip_order = list(range(numPixels))
+    def __init__(self, strip_length):
+        self.strip_order = list(range(strip_length))
         shuffle(self.strip_order)
-        self.full_stop = True
+        super(watercolor, self).__init__(strip_length)
 
     def clear(self):
         self.i = 0
         self.cleared = 0
-        self.baseC = int(random()*1024) % 256
+        self.baseC = random()
         self.dots = []
 
     def newDot(self):
-        return [randint(0, self.numPx - 1), wheel(self.baseC + random() * 30, random())]
+        return [randint(0, self.len - 1), color_wheel(self.baseC + random() / 10.0, random() / 2.0 + 0.5)]
 
-    def _step(self, state, strip):
+    def _step(self, state, leds):
         if state == State.START:
             return State.RUNNING
+        # convolution filter on led strip
         for t in range(30):
             if self.i >= len(self.strip_order):
                 self.i = 0
@@ -32,34 +32,26 @@ class watercolor(base):
                     return State.OFF
                 self.cleared += 1
             pos = self.strip_order[self.i]
-            if state != State.STOP:
-                # c0 = strip._led_data[pos-1]
-                # c1 = strip._led_data[pos]
-                # c2 = strip._led_data[(pos+1)%self.numPx]
-                # c = ((((c0&0xff0000)+(c2&0xff0000))>>1) & 0xff0000) |\
-                #     ((((c0&  0xff00)+(c2&  0xff00))>>1) & 0xff00) |\
-                #     ((((c0&    0xff)+(c2&    0xff))>>1) & 0xff)
-                strip._led_data[pos] = blend_color(strip._led_data[pos-1], strip._led_data[(pos+1)%self.numPx], 0.5)
-            else:
-                strip._led_data[pos] = 0
+            leds[pos] = (leds[pos - 1] + leds[pos] + leds[(pos + 1) % self.len]) / 3.0
             self.i += 1
         if state != State.STOP:
             # update base dots
             for t in self.dots:
-                strip._led_data[t[0]] = t[1]
+                leds[t[0]] = t[1]
             # add dots
             if len(self.dots) < 6 and self.loopCount % 10 == 0:
                 self.dots.append(self.newDot())
             # base color
-            if self.loopCount % 10 == 0:
+            if randint(0, 50) == 0 and len(self.dots) > 1:
                 i = randint(0, len(self.dots) - 1)
                 self.dots[i] = self.newDot()
             # color burst
-            if self.loopCount % 20 == 0:
-                c = wheel(randint(0, 255))
-                i = randint(0, self.numPx - 5)
-                strip._led_data[i:i+4] = [c]*4
+            if randint(0, 100) == 0:
+                i = randint(0, self.len - 5)
+                c = color_wheel(random())
+                for x in range(4):
+                    leds[i + x] = c
             # change base color
-            if self.loopCount % 100 == 0 and randint(0, 9) == 0:
-                self.baseC = randint(0, 255)
+            if randint(0, 200) == 0:
+                self.baseC = random()
         return state

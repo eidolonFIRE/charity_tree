@@ -1,6 +1,6 @@
 from patterns.base import base, State
-from random import randint
-from utils import wheel, mult_color
+from random import random, randint
+from color_utils import color_wheel
 
 
 class Wave():
@@ -13,9 +13,9 @@ class Wave():
 
 
 class pulse(base):
-    def __init__(self, numPixels):
-        super(pulse, self).__init__(numPixels)
-        self.num_waves = 4
+    def __init__(self, strip_length):
+        super(pulse, self).__init__(strip_length)
+        self.num_waves = 6
         self.one_shot = True
 
     def clear(self):
@@ -25,20 +25,20 @@ class pulse(base):
     def new_wave(self):
         return Wave(
             start=0,
-            end=min(self.numPx - 1, randint(30, self.numPx - 1)),
-            color=wheel(randint(0, 255)),
-            speed=randint(1, 3),
+            end=min(self.len - 1, randint(30, self.len - 1)),
+            color=color_wheel(random()),
+            speed=randint(2, 5),
             width=randint(5, 15))
 
-    def _step(self, state, strip):
-        # fade whole strip
-        for idx in range(0, self.numPx):
-            strip._led_data[idx] = mult_color(strip._led_data[idx], 0.9)
+    def _step(self, state, leds):
+        # fade all leds
+        for idx in range(0, self.len):
+            leds[idx] = leds[idx] * 0.8
 
         # render pulses
         for each in self.waves:
             for x in range(each.speed):
-                strip._led_data[min(self.numPx - 1, each.pos + x)] = each.color
+                leds[min(self.len - 1, each.pos + x)] = each.color
             each.pos += each.speed
             if each.pos >= each.end:
                 self.waves.remove(each)

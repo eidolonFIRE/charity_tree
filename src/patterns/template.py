@@ -1,26 +1,28 @@
 from patterns.base import base, State
-from random import randint, shuffle
-from utils import to_color, mult_color, blend_color, wheel
+from random import random, shuffle
+from color_utils import to_color, color_blend, color_wheel
 
 #
 # WARN: Class name must be the same as the file name!
 #
 class template(base):
-    def __init__(self, numPixels):
-        super(template, self).__init__(numPixels)
+    def __init__(self, strip_length):
+        self.strip_order = list(range(strip_length))
+        super(template, self).__init__(strip_length)
 
     def clear(self):
         '''
             Gets called when pattern is initiated or reset.
         '''
         self.i = 0
+        shuffle(self.strip_order)
 
-    def _step(self, state, strip):
+    def _step(self, state, leds):
         '''
             This is called each frame of the main loop.
 
             state: current state of the pattern. See base.py -> State(Enum)
-            strip: hw access to leds
+            leds: hw access to leds
         '''
 
         # === sample method 1
@@ -36,23 +38,20 @@ class template(base):
             elif state == State.STOP:
                 return State.OFF
         # set led to random color
-        strip.setPixelColor(self.strip_order[self.i], wheel(randint(0, 255)))
+        leds[self.strip_order[self.i]] = color_wheel(random())
         self.i += 1
 
         # === sample method 2
         # Update all leds every frame.
         # This is do-able for low cost patterns.
-        for i in range(self.numPx):
-            strip.setPixelColor(i, wheel(randint(0, 255)))
+        for i in range(self.len):
+            leds[i] = wheel(random())
         # Instantly update state machine.
         if state == State.START:
             return State.RUNNING
         elif state == State.STOP:
             return State.OFF
 
-        # === sample method 3
-        # Similar to #2 but using list comprehension and more direct access.
-        strip._led_data = [wheel(randint(0, 255)) for x in range(self.numPx)]
 
         # Instantly update state machine.
         if state == State.START:
@@ -63,16 +62,16 @@ class template(base):
         # === other examples  (see utils.py for more useful functions)
 
         # select a random LED
-        index = randint(0, self.numPx - 1)
+        index = randint(0, self.len - 1)
 
         # set that LED to white
-        strip.setPixelColor(index, to_color(255, 255, 255))
+        leds[index] = to_color(1.0, 1.0, 1.0)
 
         # set that LED to a random color dimmed by half
-        strip.setPixelColor(index, mult_color(wheel(randint(0, 255)), 0.5))
+        leds[index] = color_wheel(random) * 0.5
 
         # set that LED to blend between white and red
-        strip.setPixelColor(index, blend_color(to_color(255, 0, 0), to_color(255, 255, 255), 0.5))
+        leds[index] = color_blend(to_color(1.0, 0.0, 0.0), to_color(1.0, 1.0, 1.0), 0.5)
 
         # ===
         # Updated state must always be returned here.

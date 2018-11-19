@@ -7,7 +7,7 @@
 ## Linux
 - Install pip for python 3 `sudo apt install python3-pip`
 - Install numpy `python3 -m pip install numpy`
-- Install pygame for python 3 `python3 -m pip install -U pygame --user`
+- Install pygame `python3 -m pip install -U pygame --user`
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
 ## OSX

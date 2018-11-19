@@ -1,65 +1,61 @@
 from patterns.base import base, State
-from random import random
-from random import shuffle
-from utils import to_color, wheel
+from random import random, shuffle, randint
+from color_utils import to_color, color_wheel
+
+
+class Wisp():
+    def __init__(self, strip_length):
+        self.length = randint(10, 30)
+        self.px = list(range(1, self.length))
+        self.color = random()
+        self.dir = randint(0, 1) * 2 - 1
+        self.pos = 0 if self.dir == 1 else strip_length - 1
 
 
 class fairy(base):
-    def __init__(self, numPx):
-        super(fairy, self).__init__(numPx)
-        self.strip_b = [random() ** 2 for x in range(numPx)]
-        self.strip_c = [int(random() * 40) for x in range(numPx)]
+    def __init__(self, strip_length):
+        self.strip_b = [random() ** 2 for x in range(strip_length)]
+        self.strip_c = [random() / 4.0 for x in range(strip_length)]
+        self.num_wisps = 4
+        super(fairy, self).__init__(strip_length)
 
     def clear(self):
-        self.wisp = []
-        self.spawn = 0
+        self.wisps = []
+        shuffle(self.strip_c)
+        shuffle(self.strip_b)
 
-    def newWisp(self, i=-1):
-        d = (int(random()*100) % 2) * 2 - 1
-        length = int(random() * 15 + 8)
-        px = list(range(1, length))
-        c = int(random() * 1024) % 256
-        return [0 if d > 0 else self.numPx - 1, d, c, length, px]
-
-    def _step(self, state, strip):
-        for i in range(len(self.wisp)):
-            shuffle(self.wisp[i][4])
+    def _step(self, state, leds):
+        for wisp in self.wisps:
+            shuffle(wisp.px)
+            # check if wisp needs to turn back toward nearest end of the led stirp
             if state == State.STOP:
-                if self.wisp[i][1] > 0 and self.wisp[i][0] < self.numPx / 2 or self.wisp[i][1] < 0 and self.wisp[i][0] > self.numPx / 2:
-                    self.wisp[i][1] = -self.wisp[i][1]
-            if self.wisp[i][0] > self.numPx + self.wisp[i][3] or self.wisp[i][0] < -self.wisp[i][3]:
-                if state != State.STOP:
-                    if random() < 0.02 and self.spawn > 50:
-                        self.wisp[i] = self.newWisp(i)
-                        self.spawn = 0
-                    self.spawn += 1
-                else:
-                    del self.wisp[i]
-                    if len(self.wisp) == 0:
-                        shuffle(self.strip_b)
-                        shuffle(self.strip_c)
-                        print("---fairy done")
-                        return State.OFF
-                    break
+                if wisp.dir > 0 and wisp.pos < self.len / 2 or wisp.dir < 0 and wisp.pos > self.len / 2:
+                    wisp.dir = -wisp.dir
+            # check wisp finished
+            if wisp.pos > self.len + wisp.length or wisp.pos < -wisp.length:
+                self.wisps.remove(wisp)
+                if state == State.STOP and len(self.wisp) == 0:
+                    return State.OFF
             else:
-                if self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] >= 0 and self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1] < self.numPx:
-                    strip._led_data[self.wisp[i][0] - self.wisp[i][3] * self.wisp[i][1]] = 0x0
-                if self.wisp[i][0] >= 0 and self.wisp[i][0] < self.numPx:
-                    strip._led_data[self.wisp[i][0]] = to_color(255, 255, 255)
-                for x in self.wisp[i][4][0:int(self.wisp[i][3]/3)]:
-                    x = x * self.wisp[i][1]
-                    if self.wisp[i][0] - x >= 0 and self.wisp[i][0] - x < self.numPx:
-                        b = (((self.wisp[i][3]+1)-abs(x))/float(self.wisp[i][3]-1))**3 * self.strip_b[(self.wisp[i][0] + x)%self.numPx]
-                        c = wheel((self.wisp[i][2] + self.strip_c[(self.wisp[i][0] + x)%self.numPx]) % 256, b)
-                        strip._led_data[self.wisp[i][0] - x] = c
-                self.wisp[i][0] += self.wisp[i][1]
+                # clear tail
+                if wisp.pos - wisp.length * wisp.dir >= 0 and wisp.pos - wisp.length * wisp.dir < self.len:
+                    leds[wisp.pos - wisp.length * wisp.dir] = to_color()
+                # white leading spark
+                if wisp.pos >= 0 and wisp.pos < self.len:
+                    leds[wisp.pos] = to_color(1.0, 1.0, 1.0)
+                # sparkly tail
+                for x in wisp.px[0:int(wisp.length/3)]:
+                    x = x * wisp.dir
+                    if wisp.pos - x >= 0 and wisp.pos - x < self.len:
+                        b = (((wisp.length + 1) - abs(x)) / float(wisp.length - 1))**2 * self.strip_b[(wisp.pos + x) % self.len]
+                        leds[wisp.pos - x] = color_wheel(wisp.color + self.strip_c[(wisp.pos + x) % self.len], b)
+                # incr move wisp
+                wisp.pos += wisp.dir
+
+        # spawning in new wisps
         if state == State.START:
-            if len(self.wisp) < 6:
-                if (self.spawn > 50 and random() < 0.1) or len(self.wisp) == 0:
-                    self.wisp.append(self.newWisp())
-                    self.spawn = 0
-                self.spawn += 1
-            else:
-                print("---fairy full")
-                return State.RUNNING
+            state = State.RUNNING
+        if state == State.RUNNING:
+            if len(self.wisps) < self.num_wisps and randint(0, 20) == 0:
+                self.wisps.append(Wisp(self.len))
         return state
