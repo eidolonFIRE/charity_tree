@@ -15,7 +15,7 @@ class Wave():
 class pulse(base):
     def __init__(self, strip_length):
         super(pulse, self).__init__(strip_length)
-        self.num_waves = 6
+        self.num_waves = 20
         self.one_shot = True
 
     def clear(self):
@@ -45,8 +45,9 @@ class pulse(base):
 
         if state == State.START:
             if self.spawned < self.num_waves:
-                self.spawned += 1
-                self.waves.append(self.new_wave())
+                if randint(0, 5) == 0:
+                    self.spawned += 1
+                    self.waves.append(self.new_wave())
             else:
                 state = State.STOP
         elif state == State.STOP:
