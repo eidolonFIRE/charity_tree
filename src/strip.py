@@ -62,12 +62,12 @@ class Strip(object):
                 each.step(self.leds)
         self.leds.flush()
 
-    def start_pattern(self, name):
+    def start_pattern(self, name, solo=True):
         ''' start a pattern, stop all others '''
         if name in pattern_classes.keys():
             # start the desired pattern
             self.active_pats.append(pattern_classes[name](self.leds.length))
-            if not self.active_pats[-1].one_shot:
+            if solo and not self.active_pats[-1].one_shot:
                 # stop all other patterns
                 for each in self.active_pats:
                     if name != each.__class__.__name__ and each.state.value > State.OFF.value:

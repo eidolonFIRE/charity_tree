@@ -30,6 +30,11 @@ def cmd_solo(strips, cmd):
         each.start_pattern(cmd)
 
 
+def cmd_add(strips, cmd):
+    for each in strips:
+        each.start_pattern(cmd, False)
+
+
 def cmd_list(strips):
     print("")
     for index, strip in enumerate(strips):
@@ -98,6 +103,9 @@ while not done:
                 else:
                     auto_list = True
             cmd_list(strips)
+        elif words[0] == "add":
+            if len(words) > 1:
+                cmd_add(strips, words[1])
         else:
             cmd_solo(strips, words[0])
     if auto_list:

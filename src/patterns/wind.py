@@ -39,6 +39,7 @@ class wind(base):
                     leds[each.pos + 1] = to_color(1.0, 1.0, 1.0) * c * each.intensity
                 if each.pos + 2 < self.len:
                     leds[each.pos + 2] = to_color(1.0, 1.0, 1.0) * c * each.intensity / 3
+                each.pos += 1
 
         if state == State.START:
             if len(self.wisps) < self.num_wisps:
