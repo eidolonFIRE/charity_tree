@@ -35,13 +35,20 @@ def cmd_add(strips, cmd):
         each.start_pattern(cmd, False)
 
 
+def cmd_stop(strip, cmd):
+    for each in strips:
+        for pat in each.active_pats:
+            if pat.__class__.__name__ == cmd:
+                pat.state = State.STOP
+                break
+
+
 def cmd_list(strips):
     print("")
     for index, strip in enumerate(strips):
         print("\n> Strip %d:" % index)
         for each in strip.active_pats:
-            if each.state != State.OFF:
-                print("    {:15} : {:10}".format(each.__class__.__name__, each.state.name))
+            print("    {:15} : {:10}".format(each.__class__.__name__, each.state.name))
     print("")
 
 
@@ -106,6 +113,9 @@ while not done:
         elif words[0] == "add":
             if len(words) > 1:
                 cmd_add(strips, words[1])
+        elif words[0] == "stop":
+            if len(words) > 1:
+                cmd_stop(strips, words[1])
         else:
             cmd_solo(strips, words[0])
     if auto_list:

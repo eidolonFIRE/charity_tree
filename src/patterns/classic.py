@@ -1,39 +1,44 @@
 from patterns.base import base, State
-from random import randint, shuffle
+from random import randint
 from color_utils import to_color
+
+
+class Dot():
+    def __init__(self, pos):
+        self.pos = pos
+        self.offset = randint(0, 3)
+        self.color = to_color()
+        self.life = randint(0, 20)
+
+    def reset(self):
+        self.offset = randint(0, 3)
+        self.color = to_color(1.0, 0.9, 0.6)
+        self.life = randint(100, 1000)
 
 
 class classic(base):
     def __init__(self, strip_length):
-        strip_length = strip_length - (strip_length % 4)
-        self.strip_order = list(range(0, strip_length, 4))
-        shuffle(self.strip_order)
         super(classic, self).__init__(strip_length)
 
     def clear(self):
-        self.dots = []
-
-    def newDot(self, leds, idx):
-        x = self.strip_order[idx] + randint(0, 3)
-        leds[x] = to_color(1.0, 0.9, 0.6)
-        return [x, randint(50, 1000)]
+        self.dots = [Dot(x * 4) for x in range(int(self.len / 4))]
 
     def _step(self, state, leds):
-        for i in range(len(self.dots)):
-            if self.dots[i][1] == 0:
-                leds[self.dots[i][0]] = to_color()
+        for each in self.dots:
+            each.life -= 5 if state == State.STOP else 1
+            if each.life <= 0:
                 if state != State.STOP:
-                    self.dots[i] = self.newDot(leds, i)
+                    # clear old led and set to new one
+                    leds[each.pos + each.offset] = to_color()
+                    each.reset()
                 else:
-                    del self.dots[i]
+                    # check if empty
+                    self.dots.remove(each)
                     if len(self.dots) == 0:
-                        shuffle(self.strip_order)
                         return State.OFF
-            else:
-                self.dots[i][1] -= 1
+            # draw current led
+            leds[each.pos + each.offset] = each.color
+
         if state == State.START:
-            if len(self.dots) < len(self.strip_order):
-                self.dots.append(self.newDot(leds, len(self.dots)))
-            else:
-                return State.RUNNING
+            state = State.RUNNING
         return state

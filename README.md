@@ -34,6 +34,10 @@ pygame visualizer instead for pattern development and testing.
 - `exit` : Exit the program.
 - `<pattern name>` : Entering a pattern name will launch that pattern.
 - `off` : Starts the "off" pattern that turns off all leds.
+- `add <pattern>` : Add a pattern to stack of active patterns.
+- `stop <pattern>` : Trigger a pattern to stop.
+- `list` : List all active_patterns.
+- `list auto` : Toggle list being printed by default after every command. (default on)
 
 
 # Adding new patterns
