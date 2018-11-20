@@ -7,13 +7,12 @@ from patterns.base import State
 
 done = False
 
-# from websocket_server import WebsocketServer
+from websocket_server import WebsocketServer
 
 
-# def serv_recvParser(cli, serv, msg):
-#     print(msg)
-#     solo(msg)
-
+def serv_recvParser(client, server, msg):
+    print(msg)
+    do(msg)
 
 def render(strips):
     global done
@@ -52,48 +51,11 @@ def cmd_list(strips):
     print("")
 
 
-#================================================
-#
-#    INIT / CONFIG
-#
-#------------------------------------------------
-config = configparser.ConfigParser()
-if os.path.isfile('settings.ini'):
-    config.read('settings.ini')
-else:
-    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
-    exit()
-frame_rate = config.getint("global", "frame_rate")
-socket_mode = config.get("global", "mode")
-print("Mode: %s" % socket_mode)
+def do(cmd):
+    global strips
+    global auto_list
 
-# server = WebsocketServer(12000, host="0.0.0.0")
-# server.set_fn_message_received(serv_recvParser)
-# serv_thread = Thread(target=server.run_forever, args=())
-# serv_thread.start()
-
-print("Use cmd \"exit\" to close.")
-
-strips = [
-    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
-    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
-]
-
-auto_list = True
-
-
-#================================================
-#
-#    MAIN
-#
-#------------------------------------------------
-
-# main thread that updates patterns
-jobRefresh = Thread(target=render, args=(strips,))
-jobRefresh.start()
-
-while not done:
-    cmd = input("")
+    done = False
     words = cmd.split()
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
@@ -120,5 +82,51 @@ while not done:
             cmd_solo(strips, words[0])
     if auto_list:
         cmd_list(strips)
+    return done
+
+
+#================================================
+#
+#    INIT / CONFIG
+#
+#------------------------------------------------
+config = configparser.ConfigParser()
+if os.path.isfile('settings.ini'):
+    config.read('settings.ini')
+else:
+    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    exit()
+frame_rate = config.getint("global", "frame_rate")
+socket_mode = config.get("global", "mode")
+print("Mode: %s" % socket_mode)
+
+server = WebsocketServer(12000, host="0.0.0.0")
+server.set_fn_message_received(serv_recvParser)
+serv_thread = Thread(target=server.run_forever, args=())
+serv_thread.start()
+
+print("Use cmd \"exit\" to close.")
+
+strips = [
+    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
+    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
+]
+
+auto_list = True
+
+
+#================================================
+#
+#    MAIN
+#
+#------------------------------------------------
+
+# main thread that updates patterns
+jobRefresh = Thread(target=render, args=(strips,))
+jobRefresh.start()
+
+while not done:
+    cmd = input("")
+    done = do(cmd)
 
 done = True
