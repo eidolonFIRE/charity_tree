@@ -23,7 +23,7 @@
 
 # Running
 It automatically detects if you are not on raspberry pi and will launch
-pygame visualizer instead for pattern development and testing. 
+pygame visualizer instead for pattern development and testing...
 
 - Raspberry pi: `./python3 agent.py`
 - Other: `./run.sh`
