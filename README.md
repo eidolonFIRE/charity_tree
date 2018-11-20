@@ -24,7 +24,7 @@
 ## All
 - `pip3 install git+https://github.com/Pithikos/python-websocket-server`
 - `pip3 install websocket-server`
-- `pip install websockets`
+- `pip3 install websockets`
 
 
 # Running

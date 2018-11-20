@@ -6,19 +6,32 @@ from strip import Strip
 from patterns.base import State
 from websocket_server import WebsocketServer
 
-global_done = False
 
-
-def serv_recvParser(client, server, msg):
-    print(msg)
-    run_command(msg)
+#================================================
+#
+#    INIT / CONFIG
+#
+#------------------------------------------------
+config = configparser.ConfigParser()
+if os.path.isfile('settings.ini'):
+    config.read('settings.ini')
+else:
+    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    exit()
+frame_rate = config.getint("global", "frame_rate")
+auto_list = config.getboolean("global", "auto_list", fallback=True)
+strips = [
+    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
+    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
+]
+global_alive = True
 
 
 def render(strips):
-    global global_done
+    global global_alive
     global frame_rate
 
-    while not global_done:
+    while global_alive:
         for each in strips:
             each.step()
             sleep(0.5 / frame_rate)
@@ -55,12 +68,12 @@ def run_command(cmd):
     global strips
     global auto_list
     global frame_rate
-    global global_done
+    global global_alive
 
     words = cmd.split()
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
-            global_done = True
+            global_alive = False
         elif words[0] == "fps":
             if len(words) > 1:
                 frame_rate = int(words[1])
@@ -85,28 +98,9 @@ def run_command(cmd):
         cmd_list(strips)
 
 
-#================================================
-#
-#    INIT / CONFIG
-#
-#------------------------------------------------
-config = configparser.ConfigParser()
-if os.path.isfile('settings.ini'):
-    config.read('settings.ini')
-else:
-    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
-    exit()
-frame_rate = config.getint("global", "frame_rate")
-socket_mode = config.get("global", "mode")
-print("Mode: %s" % socket_mode)
-
-strips = [
-    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
-    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
-]
-
-auto_list = True
-
+def serv_recvParser(client, server, msg):
+    print(msg)
+    run_command(msg)
 
 #================================================
 #
@@ -124,9 +118,9 @@ server.set_fn_message_received(serv_recvParser)
 serv_thread = Thread(target=server.run_forever, args=())
 serv_thread.start()
 
-while not global_done:
+while global_alive:
     cmd = input("")
     run_command(cmd)
 
-global_done = True
+global_alive = False
 server.shutdown()

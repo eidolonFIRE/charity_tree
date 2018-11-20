@@ -1,5 +1,5 @@
 [global]
-mode=slave
+auto_list=True
 frame_rate=80
 [strips]
 strip_a_len=100
