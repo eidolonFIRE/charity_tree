@@ -57,7 +57,7 @@ class Strip(object):
     def step(self):
         for each in self.active_pats:
             if each.state == State.OFF:
-                del each
+                self.active_pats.remove(each)
             elif each.state.value > State.OFF.value:
                 each.step(self.leds)
         self.leds.flush()

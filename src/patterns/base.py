@@ -1,4 +1,3 @@
-from random import shuffle
 from enum import Enum
 
 

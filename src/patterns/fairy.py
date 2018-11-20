@@ -34,7 +34,7 @@ class fairy(base):
             # check wisp finished
             if wisp.pos > self.len + wisp.length or wisp.pos < -wisp.length:
                 self.wisps.remove(wisp)
-                if state == State.STOP and len(self.wisp) == 0:
+                if state == State.STOP and len(self.wisps) == 0:
                     return State.OFF
             else:
                 # clear tail
