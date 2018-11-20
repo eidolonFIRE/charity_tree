@@ -5,20 +5,25 @@
 # Setup
 
 ## Linux
-- Install pip for python 3 `sudo apt install python3-pip`
-- Install numpy `python3 -m pip install numpy`
-- Install pygame `python3 -m pip install -U pygame --user`
+- `sudo apt install python3-pip`
+- `python3 -m pip install numpy`
+- `python3 -m pip install -U pygame --user`
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
 ## OSX
-- Install python3 `brew install python3`
-- Install pygame `pip3 install pygame`
+- `brew install python3`
+- `pip3 install pygame`
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
 
 ## Setup for Raspberry Pi
-- Install python3 `sudo apt install python3`
+- `sudo apt install python3`
 - clone and install this repo next to `charity_tree`. https://github.com/jgarff/rpi_ws281x.git
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
+
+## All
+- `pip3 install git+https://github.com/Pithikos/python-websocket-server`
+- `pip3 install websocket-server`
+- `pip install websockets`
 
 
 # Running
@@ -27,6 +32,7 @@ pygame visualizer instead for pattern development and testing...
 
 - Raspberry pi: `./python3 agent.py`
 - Other: `./run.sh`
+- Send message: `python3 send_message.py "command"`
 
 
 # Commands

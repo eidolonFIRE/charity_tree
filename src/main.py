@@ -4,22 +4,21 @@ import configparser
 import os.path
 from strip import Strip
 from patterns.base import State
+from websocket_server import WebsocketServer
 
-done = False
-
-# from websocket_server import WebsocketServer
+global_done = False
 
 
-# def serv_recvParser(cli, serv, msg):
-#     print(msg)
-#     solo(msg)
+def serv_recvParser(client, server, msg):
+    print(msg)
+    run_command(msg)
 
 
 def render(strips):
-    global done
+    global global_done
     global frame_rate
 
-    while not done:
+    while not global_done:
         for each in strips:
             each.step()
             sleep(0.5 / frame_rate)
@@ -52,52 +51,16 @@ def cmd_list(strips):
     print("")
 
 
-#================================================
-#
-#    INIT / CONFIG
-#
-#------------------------------------------------
-config = configparser.ConfigParser()
-if os.path.isfile('settings.ini'):
-    config.read('settings.ini')
-else:
-    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
-    exit()
-frame_rate = config.getint("global", "frame_rate")
-socket_mode = config.get("global", "mode")
-print("Mode: %s" % socket_mode)
+def run_command(cmd):
+    global strips
+    global auto_list
+    global frame_rate
+    global global_done
 
-# server = WebsocketServer(12000, host="0.0.0.0")
-# server.set_fn_message_received(serv_recvParser)
-# serv_thread = Thread(target=server.run_forever, args=())
-# serv_thread.start()
-
-print("Use cmd \"exit\" to close.")
-
-strips = [
-    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
-    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
-]
-
-auto_list = True
-
-
-#================================================
-#
-#    MAIN
-#
-#------------------------------------------------
-
-# main thread that updates patterns
-jobRefresh = Thread(target=render, args=(strips,))
-jobRefresh.start()
-
-while not done:
-    cmd = input("")
     words = cmd.split()
     if len(words) > 0:
         if words[0] in ["quit", "exit"]:
-            done = True
+            global_done = True
         elif words[0] == "fps":
             if len(words) > 1:
                 frame_rate = int(words[1])
@@ -121,4 +84,49 @@ while not done:
     if auto_list:
         cmd_list(strips)
 
-done = True
+
+#================================================
+#
+#    INIT / CONFIG
+#
+#------------------------------------------------
+config = configparser.ConfigParser()
+if os.path.isfile('settings.ini'):
+    config.read('settings.ini')
+else:
+    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    exit()
+frame_rate = config.getint("global", "frame_rate")
+socket_mode = config.get("global", "mode")
+print("Mode: %s" % socket_mode)
+
+strips = [
+    Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
+    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
+]
+
+auto_list = True
+
+
+#================================================
+#
+#    MAIN
+#
+#------------------------------------------------
+print("Use cmd \"exit\" to close.")
+
+# main thread that updates patterns
+jobRefresh = Thread(target=render, args=(strips,))
+jobRefresh.start()
+
+server = WebsocketServer(12000, host="0.0.0.0")
+server.set_fn_message_received(serv_recvParser)
+serv_thread = Thread(target=server.run_forever, args=())
+serv_thread.start()
+
+while not global_done:
+    cmd = input("")
+    run_command(cmd)
+
+global_done = True
+server.shutdown()
