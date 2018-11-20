@@ -18,13 +18,13 @@ class seasonal(base):
             if randint(0, 15) == 0:
                 self.noise_color_t[pos] = random() / 10.0
             if randint(0, 20) == 0:
-                self.noise_bri_t[pos] = random()
+                self.noise_bri_t[pos] = random() ** 2
             # adjust brightness toward target
             self.noise_color[pos] = (self.noise_color_t[pos] - self.noise_color[pos]) * 0.05
             self.noise_bri[pos] += (self.noise_bri_t[pos] - self.noise_bri[pos]) * 0.05
 
             base_color = to_color(1.0, 0.8, 0.5) * self.noise_bri[pos]
-            leaf_color = color_wheel(abs((time() / 255.0) % 0.6 - 0.3) + self.noise_color[pos], self.noise_bri[pos])
+            leaf_color = color_wheel(abs((time() / 150.0) % 0.6 - 0.3) + self.noise_color[pos], self.noise_bri[pos])
 
             if pos < self.trunk_taper:
                 # blend from base to leaves

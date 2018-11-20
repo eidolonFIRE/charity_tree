@@ -19,6 +19,7 @@
 - `sudo apt install python3`
 - clone and install this repo next to `charity_tree`. https://github.com/jgarff/rpi_ws281x.git
 - Create settings file. `cp src/settings.ini.sample src/settings.ini`
+- `pip3 install slackclient`
 
 ## All
 - `pip3 install git+https://github.com/Pithikos/python-websocket-server`
