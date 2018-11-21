@@ -28,12 +28,22 @@ async def send_cmd(cmd):
 # callbacks from bots
 def slack_callback(message, channel):
     print("slack mention..." + message)
-    asyncio.new_event_loop().run_until_complete(send_cmd("pulse"))
+    try:
+        asyncio.new_event_loop().run_until_complete(send_cmd("pulse"))
+    except:
+        pass
 
 
 # start all the workers
 slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
 slack_thread.start()
+
+
+# start default pattern
+try:
+    asyncio.get_event_loop().run_until_complete(send_cmd("twinkle"))
+except:
+    pass
 
 
 # main holding loop

@@ -17,6 +17,8 @@ else:
     print("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
     exit()
 is_master = config.get("global", "mode").lower() == "master"
+if is_master:
+    print("--- MASTER ---")
 
 
 # detect OS
@@ -41,12 +43,10 @@ def git_pull():
 
 
 def git_check():
-    # check if HEAD is behind remote master
-    #     git rev-list HEAD...origin/master --count
+    # check if HEAD is behind remote master... git rev-list HEAD...origin/master --count
     print("Checking git for updates...")
     git = Popen(["git", "fetch", "--dry-run"], stdout=PIPE, stderr=PIPE)
     (output, err) = git.communicate()
-    # print("\t Result: ", output, err)
     git.wait()
     return True if len(err) > 2 else False
 
@@ -57,14 +57,11 @@ def thread_run_main():
     global is_rpi
 
     while global_alive:
-        if is_rpi:
-            main = Popen(["sudo", "python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
-        else:
-            main = Popen(["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        main = Popen((["sudo"] if is_rpi else []) + ["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
         sleep(1)
 
         # starting command here...
-        # main.stdin.write(b'rainbow\n')
+        # main.stdin.write(b'twinkle\n')
         # main.stdin.flush()
 
         alive = True
@@ -75,7 +72,7 @@ def thread_run_main():
             # watch for restart flag
             if force_restart_main or not global_alive or main.poll() is not None:
                 # request target shutdown
-                print("Target stop requested.")
+                print("Main stop requested.")
                 main.stdin.write(b'exit\n')
                 main.stdin.flush()
                 # main.stdin.close()
@@ -92,7 +89,7 @@ def thread_run_master():
     global force_restart_master
 
     while global_alive:
-        main = Popen(["python3", "master.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        main = Popen(["python3", "master.py"], cwd="src/", stdin=PIPE)
         sleep(1)
 
         # starting command here...
@@ -107,7 +104,7 @@ def thread_run_master():
             # watch for restart flag
             if force_restart_master or not global_alive or main.poll() is not None:
                 # request target shutdown
-                print("Target stop requested.")
+                print("Master stop requested.")
                 main.stdin.write(b'exit\n')
                 main.stdin.flush()
                 # main.stdin.close()

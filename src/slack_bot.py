@@ -10,10 +10,10 @@ import configparser
 # https://www.fullstackpython.com/blog/build-first-slack-bot-python.html
 
 config = configparser.ConfigParser()
-if os.path.isfile('settings.ini'):
-    config.read('settings.ini')
+if os.path.isfile('../config/settings.ini'):
+    config.read('../config/settings.ini')
 else:
-    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    print("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
     exit()
 
 # instantiate Slack client
