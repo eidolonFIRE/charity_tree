@@ -14,11 +14,12 @@ class Bub():
     def step(self):
         """ return True if bubble is end-of-life
         """
-        self.cur_radius += self.state
-        if self.cur_radius >= self.radius:
-            self.state = -1
-        elif self.cur_radius < 0:
-            return True
+        if randint(0, 1) == 0:
+            self.cur_radius += self.state
+            if self.cur_radius >= self.radius:
+                self.state = -1
+            elif self.cur_radius < 0:
+                return True
         return False
 
     def render(self, leds):
