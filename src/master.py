@@ -3,6 +3,7 @@ from threading import Thread
 import websockets
 import asyncio
 import os.path
+from time import sleep
 
 # load slaves from config
 slaves = []
@@ -41,6 +42,7 @@ slack_thread.start()
 
 # start default pattern
 try:
+    sleep(2)
     asyncio.get_event_loop().run_until_complete(send_cmd("twinkle"))
 except:
     pass
