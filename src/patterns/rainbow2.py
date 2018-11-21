@@ -1,7 +1,6 @@
 from patterns.base import base, State
-from random import shuffle, randint, random
-from time import time
-from color_utils import color_wheel
+from random import randint, random
+from color_utils import color_wheel, color_blend
 
 
 class rainbow2(base):
@@ -12,6 +11,9 @@ class rainbow2(base):
         self.time = 0.0
         self.speed = 0.01
         self.speed_t = 0.01
+
+    def clear(self):
+        self.sweep_in = 0
 
     def _step(self, state, leds):
         # update sweeping
@@ -25,11 +27,20 @@ class rainbow2(base):
 
         # update LEDs
         for pos in range(self.len):
-            leds[pos] = color_wheel((pos - self.len/2) * self.scale + self.time)
+            # fade in behavior
+            if state == State.START:
+                new_color = color_wheel((pos - self.len/2) * self.scale + self.time)
+                if abs(sum(leds[pos] - new_color)) - random() / 10.0 < self.sweep_in:
+                    leds[pos] = color_blend(leds[pos], new_color, 0.9)
+            else:
+                leds[pos] = color_wheel((pos - self.len/2) * self.scale + self.time)
 
         # update state machine
         if state == State.START:
-            return State.RUNNING
+            self.sweep_in += (3.0 - self.sweep_in) * 0.005
+            if self.sweep_in >= 3.0:
+                self.sweep_in = 3.0
+                return State.RUNNING
         elif state == State.STOP:
             return State.OFF
 

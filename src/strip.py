@@ -70,7 +70,7 @@ class Strip(object):
             if solo and not self.active_pats[-1].one_shot:
                 # stop all other patterns
                 for each in self.active_pats:
-                    if name != each.__class__.__name__ and each.state.value > State.OFF.value:
+                    if name != each.__class__.__name__:
                         each.state = State.STOP
         else:
             print("Unknown pattern \"%s\"" % name)

@@ -8,9 +8,8 @@ import signal
     relaunches the code.
 '''
 
-global_done = False
+global_alive = True
 force_restart = False
-force_shutdown = False
 
 
 def git_pull():
@@ -32,23 +31,24 @@ def git_check():
 
 
 def thread_run_target():
-    global global_done
+    global global_alive
     global force_restart
-    global force_shutdown
 
-    while not global_done:
+    while global_alive:
         main = Popen(["sudo", "python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
-        sleep(10)
-        main.stdin.write(b'rainbow\n')
-        main.stdin.flush()
-        # main.stdin.
+        sleep(1)
+
+        # starting command here...
+        # main.stdin.write(b'rainbow\n')
+        # main.stdin.flush()
+
         alive = True
         while alive:
             # check if target is alive every 10 seconds
             sleep(5)
 
             # watch for restart flag
-            if force_restart or force_shutdown:
+            if force_restart or not global_alive or main.poll() is not None:
                 # request target shutdown
                 print("Target stop requested.")
                 main.stdin.write(b'exit\n')
@@ -64,9 +64,9 @@ def thread_run_target():
 
 
 def signal_handler(signal, frame):
-    global global_done
+    global global_alive
     print("- INTERUPT - HALTING -")
-    global_done = True
+    global_alive = False
 
 
 jobRefresh = Thread(target=thread_run_target)  # args=(x,)
@@ -75,13 +75,13 @@ jobRefresh.start()
 signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 
-while not global_done:
+while global_alive:
     if git_check():
         print("Update needed.")
         force_restart = True
+        sleep(120)
 
     # wait 1 minute
     sleep(60)
 
-force_shutdown = True
-global_done = True
+global_alive = False
