@@ -4,9 +4,9 @@ import os.path
 
 # load slaves from config
 slaves = []
-if os.path.isfile("slaves.config"):
+if os.path.isfile("../slaves.config"):
     print("Slaves:")
-    for line in open("slaves.config", "r"):
+    for line in open("../slaves.config", "r"):
         slaves.append(line)
         print("  %s" % line)
     print("")

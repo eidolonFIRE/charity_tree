@@ -6,17 +6,16 @@ from strip import Strip
 from patterns.base import State
 from websocket_server import WebsocketServer
 
-
 #================================================
 #
 #    INIT / CONFIG
 #
 #------------------------------------------------
 config = configparser.ConfigParser()
-if os.path.isfile('settings.ini'):
-    config.read('settings.ini')
+if os.path.isfile('../config/settings.ini'):
+    config.read('../config/settings.ini')
 else:
-    print("Error: no \"settings.ini\" file. Use \"settings.ini.sample\" as template.")
+    print("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
     exit()
 frame_rate = config.getint("global", "frame_rate")
 auto_list = config.getboolean("global", "auto_list", fallback=True)
@@ -122,5 +121,6 @@ while global_alive:
     cmd = input("")
     run_command(cmd)
 
+# kill everything
 global_alive = False
 server.shutdown()

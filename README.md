@@ -18,7 +18,8 @@
 ## Setup for Raspberry Pi
 - `sudo apt install python3`
 - clone and install this repo next to `charity_tree`. https://github.com/jgarff/rpi_ws281x.git
-- Create settings file. `cp src/settings.ini.sample src/settings.ini`
+- Create settings file. `cp config/settings.ini.sample config/settings.ini`
+- Put slave IP's in `nano config/slaves.config`
 - `pip3 install slackclient`
 
 ## All
@@ -32,8 +33,8 @@ It automatically detects if you are not on raspberry pi and will launch
 pygame visualizer instead for pattern development and testing...
 
 - Raspberry pi: `./python3 agent.py`
-- Other: `./run.sh`
-- Send message: `python3 send_message.py "command"`
+- Run on-off instance during dev: `./run.sh`
+- Send messages directly: `python3 tools/send_message.py`
 
 
 # Commands

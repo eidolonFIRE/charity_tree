@@ -1,6 +1,9 @@
 [global]
+slack_token=TOKEN
 auto_list=True
 frame_rate=80
+mode=master
+
 [strips]
 strip_a_len=100
 strip_b_len=100
