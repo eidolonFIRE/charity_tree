@@ -1,6 +1,6 @@
-# A 5' 3d printed, glowing LED tree!
+# 5' 3d printed, glowing LED tree!
 
------------------------
+----------------------
 
 # Setup
 
