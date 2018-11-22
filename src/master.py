@@ -10,6 +10,7 @@ slaves = []
 if os.path.isfile("../config/slaves.config"):
     print("Slaves:")
     for line in open("../config/slaves.config", "r"):
+        line = line.strip()
         if len(line) > 4:
             slaves.append(line)
             print("  %s" % line)
