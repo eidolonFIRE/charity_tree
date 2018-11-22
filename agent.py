@@ -57,7 +57,7 @@ def thread_run_main():
     global is_rpi
 
     while global_alive:
-        main = Popen((["sudo"] if is_rpi else []) + ["python3", "main.py"], cwd="src/", stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        main = Popen((["sudo"] if is_rpi else []) + ["python3", "main.py"], cwd="src/", stdin=PIPE)
         sleep(1)
 
         # starting command here...
@@ -124,6 +124,8 @@ def signal_handler(signal, frame):
 
 thread_main = Thread(target=thread_run_main)  # args=(x,)
 thread_main.start()
+
+sleep(1)
 
 if is_master:
     thread_master = Thread(target=thread_run_master)  # args=(x,)

@@ -31,7 +31,7 @@ async def send_cmd(cmd):
 def slack_callback(message, channel):
     print("slack mention..." + message)
     try:
-        asyncio.new_event_loop().run_until_complete(send_cmd("pulse"))
+        asyncio.new_event_loop().run_until_complete(send_cmd("bubbles"))
     except:
         pass
 
@@ -43,7 +43,7 @@ slack_thread.start()
 
 # start default pattern
 try:
-    sleep(2)
+    sleep(1)
     asyncio.get_event_loop().run_until_complete(send_cmd("twinkle"))
 except:
     pass
