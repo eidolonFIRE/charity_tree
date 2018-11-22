@@ -10,8 +10,9 @@ slaves = []
 if os.path.isfile("../config/slaves.config"):
     print("Slaves:")
     for line in open("../config/slaves.config", "r"):
-        slaves.append(line)
-        print("  %s" % line)
+        if len(line):
+            slaves.append(line)
+            print("  %s" % line)
     print("")
 else:
     print("Error: Please put slave IP's in \"config/slaves.config\"")
