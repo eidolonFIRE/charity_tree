@@ -40,13 +40,13 @@ class twinkle(base):
                         x.pos = idx
                         x.state = 1
                 else:
-                    x.color *= 0.9
+                    x.color *= 0.5 if state == State.STOP else 0.9
             else:
                 # brightening
                 if sum(x.color) > 2.9:
                     x.state = 0
                 else:
-                    x.color = to_color(*[min(1.0, c + (random()**3)/10.0) for c in x.color])
+                    x.color = to_color(*[min(1.0, c + (random()**3)/(5.0 if state == State.STOP else 10.0)) for c in x.color])
             leds[x.pos] = x.color
         if state == State.START:
             if len(self.stars) < self.num_stars:
