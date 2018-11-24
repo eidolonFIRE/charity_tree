@@ -49,5 +49,3 @@ class seasonal(base):
                 return State.RUNNING
         elif state == State.STOP:
             return State.OFF
-
-        return state

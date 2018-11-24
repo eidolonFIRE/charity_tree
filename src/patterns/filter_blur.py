@@ -22,5 +22,3 @@ class filter_blur(base):
             return State.RUNNING
         elif state == State.STOP:
             return State.OFF
-        else:
-            return state

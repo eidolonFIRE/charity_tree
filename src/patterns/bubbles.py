@@ -55,8 +55,7 @@ class bubbles(base):
                     self.spawned += 1
                     self.waves.append(Bub(self.len))
             else:
-                state = State.STOP
+                return State.STOP
         elif state == State.STOP:
             if len(self.waves) == 0:
-                state = State.OFF
-        return state
+                return State.OFF

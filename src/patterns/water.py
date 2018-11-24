@@ -63,9 +63,8 @@ class water(base):
         if state == State.START:
             self.fade_in += delta_time
             if self.fade_in > 5:
-                state = State.RUNNING
+                return State.RUNNING
         elif state == State.STOP:
-            state = State.OFF
+            return State.OFF
 
         self.prev_time = time()
-        return state

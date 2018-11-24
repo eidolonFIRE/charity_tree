@@ -1,50 +1,49 @@
 from patterns.base import base, State
-from color_utils import to_color
-from random import randint
-
-
-class Stripe():
-    def __init__(self):
-        self.length = randint(4, 12)
-        self.pos = 0
-        self.color = to_color(1.0, 0, 0) if randint(0, 1) else to_color(1.0, 1.0, 1.0)
+from random import shuffle
+from time import time
+from color_utils import to_color, color_blend
 
 
 class candycane(base):
     def __init__(self, strip_length):
-        self.num_stripes = 10
         super(candycane, self).__init__(strip_length)
+        self.color_a = to_color(1.0, 1.0, 1.0)
+        self.color_b = to_color(1.0, 0.0, 0.0)
+        self.stripe_width = 12
+        self.fade_width = 5.0
 
     def clear(self):
-        self.stripes = []
+        self.sweep_in = 0.0
+        self.prev_time = time()
 
     def _step(self, state, leds):
-        for each in self.stripes:
-            if each.pos - each.length > self.len:
-                self.stripes.remove(each)
-                if state != State.STOP:
-                    self.stripes.append(Stripe())
+        for pos in range(self.len):
+            offset = pos - time() * 2
+            if offset % (self.stripe_width * 2) > self.stripe_width:
+                a = self.color_b    
+                b = self.color_a     
+            else:
+                a = self.color_a
+                b = self.color_b
+
+            # ratio of how far through a stripe
+            ratio = offset % self.stripe_width
+            if ratio < self.sweep_in + self.fade_width:
+                # blend in pattern
+                leds[pos] = color_blend(a, leds[pos], 0.1)
+            elif ratio < self.sweep_in:
+                # normal pattern
+                if ratio < self.fade_width:
+                    leds[pos] = color_blend(a, b, ratio / self.fade_width)
                 else:
-                    if len(self.stripes) == 0:
-                        return State.OFF
-            else:
-                speed = 4 if state == State.STOP else 2
-                for rep in range(speed):
-                    # clear tail
-                    leds[min(self.len - 1, max(0, each.pos - each.length))] = to_color()
+                    leds[pos] = a
 
-                    # set leader
-                    if each.pos < self.len:
-                        leds[each.pos] = each.color
-
-                    # move stripe
-                    each.pos += 1
-
+        # update state machine
         if state == State.START:
-            if len(self.stripes) < self.num_stripes:
-                if randint(0, 5) == 0:
-                    self.stripes.append(Stripe())
-            else:
-                state = State.RUNNING
-
-        return state
+            self.sweep_in += (time() - self.prev_time)
+            if self.sweep_in > self.stripe_width:
+                self.sweep_in = self.stripe_width
+                return State.RUNNING
+        elif state == State.STOP:
+            return State.OFF
+        self.prev_time = time()

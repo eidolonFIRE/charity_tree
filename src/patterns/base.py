@@ -23,4 +23,4 @@ class base(object):
 
     def step(self, leds):
         self.loopCount += 1
-        self.state = self._step(self.state, leds)
+        self.state = self._step(self.state, leds) or self.state

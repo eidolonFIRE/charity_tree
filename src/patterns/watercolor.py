@@ -54,4 +54,3 @@ class watercolor(base):
             # change base color
             if randint(0, 200) == 0:
                 self.baseC = random()
-        return state

@@ -40,5 +40,4 @@ class classic(base):
             leds[each.pos + each.offset] = each.color
 
         if state == State.START:
-            state = State.RUNNING
-        return state
+            return State.RUNNING

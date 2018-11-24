@@ -54,4 +54,3 @@ class twinkle(base):
                     self.stars.append(Star(randint(0, self.len - 1), 1, to_color()))
             else:
                 return State.RUNNING
-        return state

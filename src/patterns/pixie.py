@@ -1,7 +1,7 @@
 from patterns.base import base, State
 from random import randint, random
 from time import time
-from color_utils import to_color, color_wheel
+from color_utils import to_color, color_wheel, color_blend
 
 
 class Light():
@@ -12,11 +12,12 @@ class Light():
         self.pos_t = random() * strip_length
 
     def new_target(self):
-        self.pos_t = max(0.0, min(self.len - 1, self.pos + (random() - 0.5) * 30))
+        self.color += random() / 20.0
+        self.pos_t = max(0.0, min(self.len - 1, self.pos + (random() - 0.5) * 40))
 
     def step(self):
         self.pos += (self.pos_t - self.pos) * 0.1
-        if abs(self.pos_t - self.pos) < 2:
+        if abs(self.pos_t - self.pos) < 3:
             self.new_target()
 
 
@@ -25,7 +26,7 @@ class pixie(base):
         super(pixie, self).__init__(strip_length)
 
     def clear(self):
-        self.lights = [Light(self.len) for x in range(10)]
+        self.lights = [Light(self.len) for x in range(8)]
 
     def _step(self, state, leds):
         # fade all pixels
@@ -33,7 +34,7 @@ class pixie(base):
             leds[pos] *= 0.95
 
         for each in self.lights:
-            leds[int(each.pos)] = leds[int(each.pos)] + color_wheel(each.color) * 0.3
+            leds[int(each.pos)] = color_wheel(each.color)
             each.step()
         
 
@@ -41,5 +42,3 @@ class pixie(base):
             return State.RUNNING
         elif state == State.STOP:
             return State.OFF
-
-        return state

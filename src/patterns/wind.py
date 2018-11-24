@@ -47,4 +47,3 @@ class wind(base):
                     self.wisps.append(Wisp(self.len))
             else:
                 return State.RUNNING
-        return state

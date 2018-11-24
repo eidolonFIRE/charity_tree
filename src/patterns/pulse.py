@@ -49,8 +49,7 @@ class pulse(base):
                     self.spawned += 1
                     self.waves.append(self.new_wave())
             else:
-                state = State.STOP
+                return State.STOP
         elif state == State.STOP:
             if len(self.waves) == 0:
-                state = State.OFF
-        return state
+                return State.OFF

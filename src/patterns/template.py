@@ -72,7 +72,3 @@ class template(base):
 
         # set that LED to blend between white and red
         leds[index] = color_blend(to_color(1.0, 0.0, 0.0), to_color(1.0, 1.0, 1.0), 0.5)
-
-        # ===
-        # Updated state must always be returned here.
-        return state

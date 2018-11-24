@@ -18,12 +18,10 @@ class rainbow(base):
             if self.i >= self.len:
                 self.i = 0
                 if state == State.START:
-                    state = State.RUNNING
+                    return State.RUNNING
             pos = self.strip_order[self.i]
             leds[pos] = color_wheel(float(pos) / 255.0 + time() / 60.0)
             self.i += 1
 
         if state == State.STOP:
-            state = State.OFF
-
-        return state
+            return State.OFF

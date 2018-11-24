@@ -20,8 +20,6 @@ class off(base):
         self.i += 1
 
         if state == State.START:
-            state = State.RUNNING
+            return State.RUNNING
         elif state == State.STOP:
-            state = State.OFF
-
-        return state
+            return State.OFF

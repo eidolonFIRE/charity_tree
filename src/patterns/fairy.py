@@ -54,8 +54,7 @@ class fairy(base):
 
         # spawning in new wisps
         if state == State.START:
-            state = State.RUNNING
+            return State.RUNNING
         if state == State.RUNNING:
             if len(self.wisps) < self.num_wisps and randint(0, 20) == 0:
                 self.wisps.append(Wisp(self.len))
-        return state
