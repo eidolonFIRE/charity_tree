@@ -11,7 +11,6 @@ class rainbow(base):
 
     def clear(self):
         self.i = 0
-        self.cleared = 0
         shuffle(self.strip_order)
 
     def _step(self, state, leds):
@@ -20,13 +19,11 @@ class rainbow(base):
                 self.i = 0
                 if state == State.START:
                     state = State.RUNNING
-            if self.i == 0 and state == State.STOP:
-                if self.cleared == 2:
-                    self.cleared = 0
-                    state = State.OFF
-                self.cleared += 1
             pos = self.strip_order[self.i]
             leds[pos] = color_wheel(float(pos) / 255.0 + time() / 60.0)
             self.i += 1
+
+        if state == State.STOP:
+            state = State.OFF
 
         return state
