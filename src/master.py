@@ -36,10 +36,10 @@ pats_medium = [
     "fairy",
     "candycane",
     "fire",
-    "pixie",
 ]
 
 pats_hot = [
+    "pixie",
     "rainbow2",
     "burst",
 ]

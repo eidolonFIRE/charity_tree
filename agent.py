@@ -114,6 +114,7 @@ def thread_run_master():
                 main.stdin.flush()
                 # main.stdin.close()
                 alive = False
+                sleep(10)
 
         main.wait()
 
