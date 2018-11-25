@@ -131,7 +131,7 @@ def signal_handler(signal, frame):
 thread_main = Thread(target=thread_run_main)  # args=(x,)
 thread_main.start()
 
-sleep(1)
+sleep(10)
 
 if is_master:
     thread_master = Thread(target=thread_run_master)  # args=(x,)
