@@ -130,7 +130,5 @@ while global_alive:
         break
 
 # Kill everything
-send_cmd(choice(pats_kill))
-sleep(3)
 global_alive = False
 slack_bot.global_alive = False

@@ -73,6 +73,11 @@ def thread_run_main():
             if force_restart_main or not global_alive or main.poll() is not None:
                 # request target shutdown
                 print("Main stop requested.")
+                main.stdin.write(b'fade_off\n')
+                main.stdin.flush()
+
+                sleep(5)
+
                 main.stdin.write(b'exit\n')
                 main.stdin.flush()
                 # main.stdin.close()
