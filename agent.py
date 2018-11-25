@@ -94,7 +94,7 @@ def thread_run_master():
     global force_restart_master
 
     while global_alive:
-        main = Popen(["python3", "master.py"], cwd="src/", stdin=PIPE)
+        main = Popen(["sudo", "python3", "master.py"], cwd="src/", stdin=PIPE)
         sleep(1)
 
         # starting command here...
