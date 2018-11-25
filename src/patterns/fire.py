@@ -2,6 +2,7 @@ from patterns.base import base, State
 from random import randint, random
 from time import time
 from color_utils import to_color, color_blend
+import numpy
 
 
 class fire(base):
