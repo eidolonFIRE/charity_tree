@@ -94,7 +94,7 @@ def background_patterns():
     while global_alive:
         if len(job_stack) == 0:
             # nothing queued up!
-            job_stack.append(Job(choice(pats_mild + pats_medium), uniform(10, 60)))
+            job_stack.append(Job(choice(pats_mild + pats_medium), uniform(10, 120)))
 
         top = job_stack[-1]
 

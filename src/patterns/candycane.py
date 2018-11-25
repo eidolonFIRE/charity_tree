@@ -18,7 +18,7 @@ class candycane(base):
 
     def _step(self, state, leds):
         for pos in range(self.len):
-            offset = pos - time() * 2
+            offset = pos - time() * 3
             if offset % (self.stripe_width * 2) > self.stripe_width:
                 a = self.color_b    
                 b = self.color_a     

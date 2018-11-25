@@ -14,7 +14,10 @@ class fire(base):
     def _step(self, state, leds):
         # scan from top to bottom
         for pos in range(self.len - 1, 0, -1):
-            leds[pos] = color_blend(leds[pos], leds[pos - 1], random()**4) * 0.95
+            if numpy.sum(leds[pos - 1]) < 0.2:
+                leds[pos] = to_color()
+            else:
+                leds[pos] = color_blend(leds[pos], leds[pos - 1], random()**4) * 0.95
 
         # add fire
         for x in range(1):
