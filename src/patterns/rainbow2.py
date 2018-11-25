@@ -42,4 +42,4 @@ class rainbow2(base):
                 self.sweep_in = 3.0
                 return State.RUNNING
         elif state == State.STOP:
-            return State.OFFh
+            return State.OFF

@@ -18,7 +18,7 @@ class fire(base):
             if numpy.sum(leds[pos - 1]) < 0.2:
                 leds[pos] = to_color()
             else:
-                leds[pos] = color_blend(leds[pos], leds[pos - 1], random()**4) * 0.95
+                leds[pos] = color_blend(leds[pos], leds[pos - 1], random()**4) * 0.97
 
         # add fire
         for x in range(1):
