@@ -16,7 +16,7 @@ class Light():
         self.pos_t = max(0.0, min(self.len - 1, self.pos + (random() - 0.5) * 40))
 
     def step(self):
-        self.pos += (self.pos_t - self.pos) * 0.1
+        self.pos += (self.pos_t - self.pos) * 0.05
         if abs(self.pos_t - self.pos) < 3:
             self.new_target()
 

@@ -9,8 +9,8 @@ class candycane(base):
         super(candycane, self).__init__(strip_length)
         self.color_a = to_color(1.0, 1.0, 1.0)
         self.color_b = to_color(1.0, 0.0, 0.0)
-        self.stripe_width = 12
-        self.fade_width = 5.0
+        self.stripe_width = 20
+        self.fade_width = 4.0
 
     def clear(self):
         self.sweep_in = 0.0

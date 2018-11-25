@@ -39,6 +39,7 @@ class water(base):
     def __init__(self, strip_length):
         super(water, self).__init__(strip_length)
         self.waves = [Wave(strip_length) for x in range(4)]
+        self.waves_g = [Wave(strip_length) for x in range(2)]
 
     def clear(self):
         self.prev_time = time()
@@ -50,14 +51,17 @@ class water(base):
         # step for each Wave
         for each in self.waves:
             each.step(delta_time)
+        for each in self.waves_g:
+            each.step(delta_time)
 
         # concat waves
         for pos in range(0, self.len):
             b = self.waves[0].get(pos) * self.waves[1].get(pos) + self.waves[2].get(pos) * self.waves[3].get(pos)
+            g = self.waves_g[0].get(pos) * self.waves_g[1].get(pos)
             if state == State.START:
-                leds[pos] = color_blend(to_color(0.0, b / 3, b), leds[pos], (self.fade_in / 5.0) ** 2)
+                leds[pos] = color_blend(to_color(0.0, b * g, b), leds[pos], (self.fade_in / 5.0) ** 2)
             else:
-                leds[pos] = to_color(0.0, b / 3, b)
+                leds[pos] = to_color(0.0, b * g, b)
 
         # simple state machine
         if state == State.START:
