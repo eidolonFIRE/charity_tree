@@ -1,9 +1,8 @@
 from patterns.base import base, State
-from random import randint, random, uniform
+from random import random, uniform
 from time import time
 from color_utils import to_color, color_blend
 import math
-import numpy
 
 
 class Wave():
@@ -18,7 +17,7 @@ class Wave():
 
     def reset(self):
         self.duration = uniform(5.0, 20.0)
-        self.freq_t = (random() - 0.5) / 10.0
+        self.freq_t = (random() - 0.5) * 4.0
         self.offset_t = random() * 20.0
         self.scale_t = (random() + 0.02) / 3.0
 

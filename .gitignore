@@ -5,6 +5,7 @@ __pycache__/
 *.ini
 ledlib/
 *.config
+*.save
 
 # sublime
 *.sublime-project

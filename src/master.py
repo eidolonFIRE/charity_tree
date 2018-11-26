@@ -4,7 +4,8 @@ import websockets
 import asyncio
 import os.path
 from time import sleep, time
-from random import choice, uniform
+from random import choice, uniform, randint
+import donations
 
 # load slaves from config
 slaves = []
@@ -22,6 +23,7 @@ else:
 print("Ready! Input your commands... \"exit\" to close.")
 
 global_alive = True
+job_stack = []
 
 pats_mild = [
     "twinkle",
@@ -57,14 +59,14 @@ pats_kill = [
 pats_all = pats_mild + pats_medium + pats_hot
 
 
-
 class Job():
     def __init__(self, name, duration):
         self.name = name
         self.duration = duration
         self.start = None
 
-job_stack = []
+    def remaining(self):
+        return (self.start + self.duration) - time()
 
 
 # send command to all slaves
@@ -87,14 +89,45 @@ def slack_callback(message, channel):
         pass
 
 
+def email_callback(person, amount):
+    print("{} made a donation of {}".format(person, amount))
+    add_pattern(choice(pats_hot), 30)
+    slack_bot.money_raised += float(amount.replace("$", ""))
+
+    # save back to file
+    file = open("../config/donations.save", "w")
+    file.write("{:2.2f}               ".format(slack_bot.money_raised))
+    file.close()
+
+
+def add_pattern(name, duration):
+    global job_stack
+    # stop current job
+    if len(job_stack) > 0 and job_stack[-1].start:
+        # don't add duplicate
+        if job_stack[-1].name == name:
+            job_stack[-1].duration += duration
+            return
+
+        # see if job was close to done anyway
+        if job_stack[-1].remaining() < 10:
+            job_stack.pop()
+        else:
+            job_stack[-1].start = None
+
+    # add new pattern
+    job_stack.append(Job(name, duration))
+
+
 def background_patterns():
     global global_alive
     global job_stack
+    global last_pattern
 
     while global_alive:
         if len(job_stack) == 0:
             # nothing queued up!
-            job_stack.append(Job(choice(pats_mild + pats_medium), uniform(10, 120)))
+            add_pattern(choice(pats_mild + pats_medium), randint(60, 120))
 
         top = job_stack[-1]
 
@@ -103,11 +136,11 @@ def background_patterns():
             top.start = time()
             send_cmd(top.name)
         else:
-            if time() > top.start + top.duration:
+            if top.remaining() <= 0:
                 # pattern completed
                 job_stack.pop()
 
-
+        sleep(1)
 
 
 
@@ -120,7 +153,8 @@ background_thread.start()
 slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
 slack_thread.start()
 
-
+email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
+email_thread.start()
 
 # main holding loop
 while global_alive:
@@ -132,3 +166,6 @@ while global_alive:
 # Kill everything
 global_alive = False
 slack_bot.global_alive = False
+donations.global_alive = False
+
+sleep(1)

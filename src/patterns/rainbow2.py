@@ -37,7 +37,7 @@ class rainbow2(base):
 
         # update state machine
         if state == State.START:
-            self.sweep_in += (3.0 - self.sweep_in) * 0.005
+            self.sweep_in += (3.0 - self.sweep_in) * 0.01
             if self.sweep_in >= 3.0:
                 self.sweep_in = 3.0
                 return State.RUNNING

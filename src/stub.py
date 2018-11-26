@@ -3,7 +3,7 @@ import pygame
 
 pygame.init()
 myDisplay = pygame.display.set_mode((700, 900), pygame.RESIZABLE)
-pygame.display.set_caption('A*')
+pygame.display.set_caption('Charity Tree Viz')
 
 myDisplay.fill((10, 10, 10))
 pygame.display.update()

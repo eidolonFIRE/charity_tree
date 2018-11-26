@@ -3,7 +3,7 @@ import time
 import re
 import datetime
 from slackclient import SlackClient
-from random import sample, choice, random, randint
+from random import sample, choice, randint
 import configparser
 
 # TUTORIAL:
@@ -21,14 +21,22 @@ slack_client = SlackClient(config.get("global", "slack_token"))
 # starterbot's user ID in Slack: value is assigned after the bot starts up
 BOT_ID = None
 
+# load current donation amount
+if os.path.isfile("../config/donations.save"):
+    file = open("../config/donations.save", "r")
+    money_raised = float(file.read())
+    print("Loaded \"money_raised\" = {:2.2f}".format(money_raised))
+else:
+    money_raised = 0.0
 
-money_raised = random() * 100
+
 global_alive = True
 
-channel_Ids = {
-    "charity-tree-project": "GCDNZ6VND",
-    "cruisecares": "C52GLMRC7",
-}
+channel_Ids = [
+    "GCDNZ6VND",  # charity-tree-project
+    "C52GLMRC7",  # cruisecares
+    "DE9BFE5UL",  # Caleb's DM with charity-tree bot
+]
 
 exclaims = [
     "",
@@ -293,12 +301,12 @@ def thread_run(callback):
         BOT_ID = slack_client.api_call("auth.test")["user_id"]
         while global_alive:
             message, channel = parse_bot_commands(slack_client.rtm_read())
-            if message:
+            if message and channel in channel_Ids:
                 message = message.lower()
                 callback(message, channel)
                 print("{} : Channel {} : \"{}\"".format(datetime.datetime.now(), channel, message))
                 # how much money has been raised
-                if any(x in message for x in ["how much", "given", "raise", "amount", "up to"]):
+                if any(x in message for x in ["how much", "given", "raise", "amount", "up to", "donate"]):
                     chat_amount_raised(channel)
 
                 # general info
@@ -307,15 +315,15 @@ def thread_run(callback):
 
                 # fun stuff
                 elif any(x in message for x in ["emoji"]):
-                    send_response(get_random_emojis(emoji_all, randint(5, 30)), channel)
+                    send_response(get_random_emojis(emoji_all, randint(5, 20)), channel)
                 elif any(x in message for x in ["love", "heart"]):
-                    send_response(get_random_emojis(emoji_heart, randint(1, 20)), channel)
+                    send_response(get_random_emojis(emoji_heart, randint(1, 10)), channel)
                 elif any(x in message for x in ["dance", "party"]):
-                    send_response(get_random_emojis(emoji_dance, randint(10, 30)), channel)
+                    send_response(get_random_emojis(emoji_dance, randint(10, 20)), channel)
                 elif any(x in message for x in ["parrot"]):
-                    send_response(get_random_emojis(emoji_parrot, randint(10, 20)), channel)
+                    send_response(get_random_emojis(emoji_parrot, randint(5, 10)), channel)
                 elif any(x in message for x in ["think", "toby"]):
-                    send_response(get_random_emojis(emoji_think, randint(10, 20)), channel)
+                    send_response(get_random_emojis(emoji_think, randint(5, 10)), channel)
 
                 # default response
                 else:
