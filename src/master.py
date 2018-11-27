@@ -74,6 +74,12 @@ async def _send_cmd(cmd):
     for each in slaves:
         async with websockets.connect('ws://%s:12000' % each) as websocket:
             await websocket.send(cmd)
+    # send command again just to be sure
+    sleep(0.1)
+    for each in slaves:
+        async with websockets.connect('ws://%s:12000' % each) as websocket:
+            await websocket.send(cmd)
+
 
 
 def send_cmd(cmd):
