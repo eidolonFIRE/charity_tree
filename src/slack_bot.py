@@ -342,7 +342,7 @@ def thread_run(callback):
                     chat_faq(channel)
                 elif any(x in message for x in ["how does", "this work", "what is", "what do", "who is", "who are you", "tell me", "whoami", "info", "project"]):
                     chat_info(channel)
-                elif any(x in message for x in ["credits", "responsible", "who built"]):
+                elif any(x in message for x in ["credits", "responsible", "who built", "who made"]):
                     chat_credits(channel)
 
                 # fun stuff
