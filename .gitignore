@@ -4,8 +4,10 @@ __pycache__/
 *$py.class
 *.ini
 ledlib/
+rpi_ws281x/
 *.config
 *.save
+
 
 # sublime
 *.sublime-project
