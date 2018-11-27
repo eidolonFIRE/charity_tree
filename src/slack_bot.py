@@ -21,6 +21,11 @@ if os.path.isfile('../config/charity_links.config'):
     with open("../config/charity_links.config") as file:
         charity_links_text = file.read()
 
+charity_credits_text = "< no info in charity_credits.config >"
+if os.path.isfile('../config/charity_credits.config'):
+    with open("../config/charity_credits.config") as file:
+        charity_credits_text = file.read()
+
 # instantiate Slack client
 slack_client = SlackClient(config.get("global", "slack_token"))
 # starterbot's user ID in Slack: value is assigned after the bot starts up
@@ -308,6 +313,10 @@ def chat_paypal_venmo(channel):
     send_response(charity_links_text, channel)
 
 
+def chat_credits(channel):
+    send_response(charity_credits_text, channel)
+
+
 def thread_run(callback):
     global global_alive
     global BOT_ID
@@ -333,7 +342,8 @@ def thread_run(callback):
                     chat_faq(channel)
                 elif any(x in message for x in ["how does", "this work", "what is", "what do", "who is", "who are you", "tell me", "whoami", "info", "project"]):
                     chat_info(channel)
-
+                elif any(x in message for x in ["credits", "responsible", "who built"]):
+                    chat_credits(channel)
 
                 # fun stuff
                 elif any(x in message for x in ["emoji"]):
