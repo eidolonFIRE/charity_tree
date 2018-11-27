@@ -16,6 +16,11 @@ else:
     print("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
     exit()
 
+charity_links_text = "< no info in charity_links.config >"
+if os.path.isfile('../config/charity_links.config'):
+    with open("../config/charity_links.config") as file:
+        charity_links_text = file.read()
+
 # instantiate Slack client
 slack_client = SlackClient(config.get("global", "slack_token"))
 # starterbot's user ID in Slack: value is assigned after the bot starts up
@@ -35,7 +40,7 @@ global_alive = True
 channel_Ids = [
     "GCDNZ6VND",  # charity-tree-project
     "C52GLMRC7",  # cruisecares
-    "DE9BFE5UL",  # Caleb's DM with charity-tree bot
+    # "DE9BFE5UL",  # Caleb's DM with charity-tree bot
 ]
 
 exclaims = [
@@ -291,6 +296,18 @@ def chat_help(channel):
     send_response("Ask me how much money we've raised or about the `charity-tree` project.", channel)
 
 
+def chat_faq(channel):
+    send_response("""*Charity-Tree FAQ:*
+- Either Venmo or Paypal may be used to make a donation.
+- Both accounts go to Thu Pham. All proceeds are tracked and will be forwarded to The Arc SF org.
+- To get a tax deductible receipt for your donation contact --------------.
+- The donation drive ends the day of our company Holiday Party (Dec 14th).""", channel)
+
+
+def chat_paypal_venmo(channel):
+    send_response(charity_links_text, channel)
+
+
 def thread_run(callback):
     global global_alive
     global BOT_ID
@@ -301,17 +318,22 @@ def thread_run(callback):
         BOT_ID = slack_client.api_call("auth.test")["user_id"]
         while global_alive:
             message, channel = parse_bot_commands(slack_client.rtm_read())
-            if message and channel in channel_Ids:
+            if message and (channel in channel_Ids or channel[0] == 'D'):
                 message = message.lower()
                 callback(message, channel)
                 print("{} : Channel {} : \"{}\"".format(datetime.datetime.now(), channel, message))
                 # how much money has been raised
-                if any(x in message for x in ["how much", "given", "raise", "amount", "up to", "donate"]):
+                if any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate"]):
                     chat_amount_raised(channel)
 
                 # general info
-                elif any(x in message for x in ["how does", "this work", "what is", "what do", "who is", "who are you", "tell me", "whoami", "info"]):
+                elif any(x in message for x in ["where do", "paypal", "venmo", "how do"]):
+                    chat_paypal_venmo(channel)
+                elif any(x in message for x in ["faq", "f.a.q.", "f. a. q.", "f a q", "more info"]):
+                    chat_faq(channel)
+                elif any(x in message for x in ["how does", "this work", "what is", "what do", "who is", "who are you", "tell me", "whoami", "info", "project"]):
                     chat_info(channel)
+
 
                 # fun stuff
                 elif any(x in message for x in ["emoji"]):

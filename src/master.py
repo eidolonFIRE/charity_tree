@@ -36,7 +36,6 @@ pats_mild = [
 pats_medium = [
     "rainbow",
     "fairy",
-    "candycane",
     "fire",
 ]
 
@@ -44,6 +43,7 @@ pats_hot = [
     "pixie",
     "rainbow2",
     "burst",
+    "candycane",
 ]
 
 pats_one_off = [
