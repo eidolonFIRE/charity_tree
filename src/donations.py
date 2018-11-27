@@ -120,6 +120,10 @@ def readmail_paypal(action=None):
 
 def thread_donations(callback):
     global global_alive
+    global FROM_EMAIL
+
+    if FROM_EMAIL == "none":
+        return
 
     while global_alive:
         readmail_venmo(callback)

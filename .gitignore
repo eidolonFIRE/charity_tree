@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.ini
-ledlib/
+ledlib
 rpi_ws281x/
 *.config
 *.save
