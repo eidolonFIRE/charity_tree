@@ -100,7 +100,7 @@ def slack_callback(message, channel):
             asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_kill)))
         except:
             pass
-        if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
+        if any(x in message for x in ["half", "30", "1/2"]):
             disabled_timestamp = time() + 60 * 30
         else:
             disabled_timestamp = time() + 60 * 60
