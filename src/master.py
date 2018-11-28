@@ -99,14 +99,11 @@ def slack_callback(message, channel):
             asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_kill)))
         except:
             pass
-        global_enabled = False
-        sleep(2)
-        if len(job_stack):
-            job_stack[-1].start = None
         if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
             disabled_timestamp = time() + 60 * 30
         else:
             disabled_timestamp = time() + 60 * 60
+        global_enabled = False
     elif "caleb says enable" in message:
         global_enabled = True
 
@@ -172,6 +169,9 @@ def background_patterns():
         else:
             if time() > disabled_timestamp:
                 global_enabled = True
+                # jump start
+                if len(job_stack):
+                    job_stack[-1].start = None
         sleep(1)
 
 
