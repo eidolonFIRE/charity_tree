@@ -100,6 +100,7 @@ def slack_callback(message, channel):
         except:
             pass
         global_enabled = False
+        sleep(2)
         if len(job_stack):
             job_stack[-1].start = None
         if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
