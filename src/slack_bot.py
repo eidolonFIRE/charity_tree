@@ -336,7 +336,7 @@ def thread_run(callback):
                     send_response("got it! :+1:", channel)
 
                 # how much money has been raised
-                elif any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate"]):
+                elif any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate", "money"]):
                     chat_amount_raised(channel)
 
                 # general info
@@ -346,10 +346,14 @@ def thread_run(callback):
                     chat_faq(channel)
                 elif any(x in message for x in ["how does", "this work", "what is", "what do", "who is", "who are you", "tell me", "whoami", "info", "project"]):
                     chat_info(channel)
-                elif any(x in message for x in ["credits", "responsible", "who built", "who made"]):
+                elif any(x in message for x in ["credits", "responsible", "who built", "who made", "who helped"]):
                     chat_credits(channel)
 
                 # fun stuff
+                elif any(x in message for x in ["what time is it"]):
+                    send_response("Time to DONATE! " + get_random_emojis(emoji_heart + emoji_dance + emoji_tree, randint(5, 10)), channel)
+                elif any(x in message for x in ["favorite color"]):
+                    send_response("The color of love! " + get_random_emojis(emoji_heart, randint(5, 10)), channel)
                 elif any(x in message for x in ["emoji"]):
                     send_response(get_random_emojis(emoji_all, randint(5, 20)), channel)
                 elif any(x in message for x in ["love", "heart"]):
