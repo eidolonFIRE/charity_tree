@@ -331,8 +331,12 @@ def thread_run(callback):
                 message = message.lower()
                 callback(message, channel)
                 print("{} : Channel {} : \"{}\"".format(datetime.datetime.now(), channel, message))
+                # admin commands
+                if any(x in message for x in ["caleb says"]):
+                    send_response("got it! :+1:", channel)
+
                 # how much money has been raised
-                if any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate"]):
+                elif any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate"]):
                     chat_amount_raised(channel)
 
                 # general info
