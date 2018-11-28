@@ -90,6 +90,7 @@ class Idler(object):
             if self.needsync:
                 self.event.clear()
                 self.dosync()
+            sleep(5)
 
     # The method that gets called when a new email arrives.
     # Replace it with something better.
@@ -115,7 +116,6 @@ def search_venmo(mail):
 
 
 def readmail_venmo(mail, action=None):
-    #mail = login()
     for mail_id in search_venmo(mail):
         type, data = mail.fetch(mail_id, '(RFC822)')
 
@@ -137,8 +137,6 @@ def readmail_venmo(mail, action=None):
                     mail.store(mail_id, '+FLAGS', '\\SEEN')
                 if VERBOSE:
                     logger.info('\n')
-    # mail.close()
-    # mail.logout()
 
 
 def search_paypal(mail):
@@ -150,7 +148,6 @@ def search_paypal(mail):
 
 
 def readmail_paypal(mail, action=None):
-    #mail = login()
     for mail_id in search_paypal(mail):
         type, data = mail.fetch(mail_id, '(RFC822)')
 
@@ -184,8 +181,6 @@ def readmail_paypal(mail, action=None):
                     mail.store(mail_id, '+FLAGS', '\\SEEN')
                 if VERBOSE:
                     logger.info('\n')
-    # mail.close()
-    # mail.logout()
 
 
 def thread_donations(callback):
@@ -196,18 +191,18 @@ def thread_donations(callback):
         return
 
     while global_alive:
-        mail = login()
-        idler = Idler(mail, callback)
-        idler.start()
-        # idler.stop()
-        idler.join()
-        logger.info('idler thread has joined - restarting login')
-        mail.close()
-        mail.logout()
-        # readmail_venmo(callback)
-        # sleep(5)
-        # readmail_paypal(callback)
-        # sleep(5)
+        try:
+            mail = login()
+            idler = Idler(mail, callback)
+            idler.start()
+            # idler.stop()
+            idler.join()
+            logger.info('idler thread has joined - restarting login')
+            mail.close()
+            mail.logout()
+        except:
+            pass
+        sleep(5)
 
 ####
 # For local testing:

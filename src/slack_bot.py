@@ -305,7 +305,6 @@ def chat_faq(channel):
     send_response("""*Charity-Tree FAQ:*
 - Either Venmo or Paypal may be used to make a donation.
 - Both accounts go to Thu Pham. All proceeds are tracked and will be forwarded to The Arc SF org.
-- To get a tax deductible receipt for your donation contact --------------.
 - The donation drive ends the day of our company Holiday Party (Dec 14th).""", channel)
 
 
