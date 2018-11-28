@@ -23,6 +23,8 @@ else:
 print("Ready! Input your commands... \"exit\" to close.")
 
 global_alive = True
+global_enabled = True
+disabled_timestamp = 0
 job_stack = []
 
 pats_mild = [
@@ -81,18 +83,34 @@ async def _send_cmd(cmd):
             await websocket.send(cmd)
 
 
-
 def send_cmd(cmd):
     asyncio.new_event_loop().run_until_complete(_send_cmd(cmd))
 
 
 # callbacks from bots
 def slack_callback(message, channel):
+    global global_enabled
     print("slack mention:" + message)
-    try:
-        asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_one_off)))
-    except:
-        pass
+
+    # remote admin controll
+    if "caleb says disable" in message:
+        try:
+            asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_kill)))
+        except:
+            pass
+        global_enabled = False
+        if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
+            disabled_timestamp = time() + 60 * 30
+        elif any(x in message for x in ["one hour", "60min", "60 min", "1hr"]):
+            disabled_timestamp = time() + 60 * 60
+    elif "caleb says enable" in message:
+        global_enabled = True
+
+    if global_enabled:
+        try:
+            asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_one_off)))
+        except:
+            pass
 
 
 def email_callback(person, amount):
@@ -127,25 +145,29 @@ def add_pattern(name, duration):
 
 def background_patterns():
     global global_alive
+    global global_enabled
     global job_stack
     global last_pattern
 
     while global_alive:
-        if len(job_stack) == 0:
-            # nothing queued up!
-            add_pattern(choice(pats_mild + pats_medium), randint(60, 120))
+        if global_enabled:
+            if len(job_stack) == 0:
+                # nothing queued up!
+                add_pattern(choice(pats_mild + pats_medium), randint(60, 120))
+            else:
+                top = job_stack[-1]
 
-        top = job_stack[-1]
-
-        if top.start == None:
-            # start the next pattern
-            top.start = time()
-            send_cmd(top.name)
+                if top.start == None:
+                    # start the next pattern
+                    top.start = time()
+                    send_cmd(top.name)
+                else:
+                    if top.remaining() <= 0:
+                        # pattern completed
+                        job_stack.pop()
         else:
-            if top.remaining() <= 0:
-                # pattern completed
-                job_stack.pop()
-
+            if time() > disabled_timestamp:
+                global_enabled = True
         sleep(1)
 
 
