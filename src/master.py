@@ -90,6 +90,7 @@ def send_cmd(cmd):
 # callbacks from bots
 def slack_callback(message, channel):
     global global_enabled
+    global job_stack
     print("slack mention:" + message)
 
     # remote admin controll
@@ -99,6 +100,8 @@ def slack_callback(message, channel):
         except:
             pass
         global_enabled = False
+        if len(job_stack):
+            job_stack[-1].start = None
         if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
             disabled_timestamp = time() + 60 * 30
         else:
@@ -106,7 +109,7 @@ def slack_callback(message, channel):
     elif "caleb says enable" in message:
         global_enabled = True
 
-    if global_enabled:
+    elif global_enabled:
         try:
             asyncio.new_event_loop().run_until_complete(_send_cmd(choice(pats_one_off)))
         except:
