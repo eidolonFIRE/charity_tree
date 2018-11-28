@@ -101,7 +101,7 @@ def slack_callback(message, channel):
         global_enabled = False
         if any(x in message for x in ["half hour", "30min", "30 min", "1/2hr"]):
             disabled_timestamp = time() + 60 * 30
-        elif any(x in message for x in ["one hour", "60min", "60 min", "1hr"]):
+        else:
             disabled_timestamp = time() + 60 * 60
     elif "caleb says enable" in message:
         global_enabled = True
