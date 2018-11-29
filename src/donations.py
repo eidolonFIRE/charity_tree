@@ -200,7 +200,7 @@ def thread_donations(callback):
             print('idler thread has joined - restarting login')
             mail.close()
             mail.logout()
-        except Exception, e:
+        except Exception as e:
             print("donations thread crash")
             print(Exception, e)
             
