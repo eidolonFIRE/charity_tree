@@ -91,7 +91,6 @@ class Idler(object):
             if self.needsync:
                 self.event.clear()
                 self.dosync()
-            sleep(5)
 
     # The method that gets called when a new email arrives.
     # Replace it with something better.
