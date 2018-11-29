@@ -106,7 +106,7 @@ def serv_recvParser(client, server, msg):
 #    MAIN
 #
 #------------------------------------------------
-print("Use cmd \"exit\" to close.")
+print("Main: Use cmd \"exit\" to close.")
 
 # main thread that updates patterns
 jobRefresh = Thread(target=render, args=(strips,))

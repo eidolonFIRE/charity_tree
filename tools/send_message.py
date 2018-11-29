@@ -4,16 +4,16 @@ import os.path
 
 # load slaves from config
 slaves = []
-if os.path.isfile("config/slaves.config"):
+if os.path.isfile("tools/slaves.config"):
     print("Slaves:")
-    for line in open("config/slaves.config", "r"):
+    for line in open("tools/slaves.config", "r"):
         line = line.strip()
         if len(line) > 4:
             slaves.append(line)
             print("  %s" % line)
     print("")
 else:
-    print("Error: Please put slave IP's in \"config/slaves.config\"")
+    print("Error: Please put slave IP's in \"tools/slaves.config\"")
     exit()
 
 

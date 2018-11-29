@@ -20,7 +20,7 @@ if os.path.isfile("../config/slaves.config"):
 else:
     print("Error: Please put slave IP's in \"config/slaves.config\"")
     exit()
-print("Ready! Input your commands... \"exit\" to close.")
+print("Master: Ready! Input your commands... \"exit\" to close.")
 
 global_alive = True
 global_enabled = True
@@ -187,8 +187,8 @@ background_thread.start()
 slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
 slack_thread.start()
 
-email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
-email_thread.start()
+# email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
+# email_thread.start()
 
 # main holding loop
 while global_alive:
