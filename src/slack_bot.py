@@ -335,11 +335,11 @@ def thread_run(callback):
                     send_response("got it! :+1:", channel)
 
                 # how much money has been raised
-                elif any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donate", "money"]):
+                elif any(x in message for x in ["how much", "give", "gave", "raise", "amount", "up to", "donated", "money"]):
                     chat_amount_raised(channel)
 
                 # general info
-                elif any(x in message for x in ["where do", "paypal", "venmo", "how do"]):
+                elif any(x in message for x in ["where do", "paypal", "venmo", "how do", "donate"]):
                     chat_paypal_venmo(channel)
                 elif any(x in message for x in ["faq", "f.a.q.", "f. a. q.", "f a q", "more info"]):
                     chat_faq(channel)
