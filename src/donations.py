@@ -12,18 +12,18 @@ import sys
 from threading import Thread, Event
 
 
-logger = logging.getLogger('email')
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger('email')
+# logger.setLevel(logging.DEBUG)
 
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.DEBUG)
-logger.addHandler(handler)
+# handler = logging.StreamHandler(sys.stdout)
+# handler.setLevel(logging.DEBUG)
+# logger.addHandler(handler)
 
 config = configparser.ConfigParser()
 if os.path.isfile('../config/settings.ini'):
     config.read('../config/settings.ini')
 else:
-    logger.info("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
+    print("Error: no \"config/settings.ini\" file. Use \"config/settings.ini.sample\" as template.")
     exit()
 
 
@@ -96,7 +96,7 @@ class Idler(object):
     # The method that gets called when a new email arrives.
     # Replace it with something better.
     def dosync(self):
-        logger.info('recieved changes')
+        print('recieved changes')
         readmail_paypal(self.M, self.callback)
         readmail_venmo(self.M, self.callback)
 
@@ -112,7 +112,7 @@ def search_venmo(mail):
     type, data = mail.search(None, '(UNSEEN FROM "venmo@venmo.com")')
     mail_ids = data[0].split()
     if len(mail_ids) > 0 and VERBOSE:
-        logger.info('Found {} emails'.format(mail_ids))
+        print('Found {} emails'.format(mail_ids))
     return mail_ids
 
 
@@ -125,11 +125,11 @@ def readmail_venmo(mail, action=None):
                 msg = email.message_from_string(response_part[1])
                 email_subject = msg['subject']
                 if VERBOSE:
-                    logger.info('Subject : ' + email_subject)
+                    print('Subject : ' + email_subject)
                 if 'paid you' in email_subject:
                     person, amount = email_subject.split(' paid you ')
                     if VERBOSE:
-                        logger.info('Person: {}, Amount: {}'.format(person, amount))
+                        print('Person: {}, Amount: {}'.format(person, amount))
                     if action:
                         action(person, amount)
                 if TEST_MODE:
@@ -137,14 +137,14 @@ def readmail_venmo(mail, action=None):
                 else:
                     mail.store(mail_id, '+FLAGS', '\\SEEN')
                 if VERBOSE:
-                    logger.info('\n')
+                    print('\n')
 
 
 def search_paypal(mail):
     type, data = mail.search(None, '(UNSEEN FROM "service@intl.paypal.com")')
     mail_ids = data[0].split()
     if len(mail_ids) > 0 and VERBOSE:
-        logger.info('Found {} emails'.format(mail_ids))
+        print('Found {} emails'.format(mail_ids))
     return mail_ids
 
 
@@ -154,14 +154,14 @@ def readmail_paypal(mail, action=None):
 
         for response_part in data:
             if isinstance(response_part, tuple):
-                logger.info(response_part[1])
+                print(response_part[1])
                 msg = email.message_from_string(response_part[1])
                 email_subject = msg['subject']
                 if VERBOSE:
-                    logger.info('Subject : ' + email_subject)
+                    print('Subject : ' + email_subject)
                 if "You've got money" in email_subject:
                     person, amount = [None, None]
-                    logger.info(msg.get_payload())
+                    print(msg.get_payload())
                     html = base64.b64decode(msg.get_payload()).decode('utf-8')
                     if 'sent you' in html:
                         html_part = html.split(' sent you ')
@@ -170,10 +170,10 @@ def readmail_paypal(mail, action=None):
                         html_part_2 = html_part[1].split('USD')
                         amount = html_part_2[0]
                         if VERBOSE:
-                            logger.info('Person: {}, Amount: {}'.format(person, amount))
+                            print('Person: {}, Amount: {}'.format(person, amount))
                     else:
                         if VERBOSE:
-                            logger.info('WARNING: unable to parse paypal email with mail id %s' % mail_id)
+                            print('WARNING: unable to parse paypal email with mail id %s' % mail_id)
                     if action:
                         action(person, amount)
                 if TEST_MODE:
@@ -181,7 +181,7 @@ def readmail_paypal(mail, action=None):
                 else:
                     mail.store(mail_id, '+FLAGS', '\\SEEN')
                 if VERBOSE:
-                    logger.info('\n')
+                    print('\n')
 
 
 def thread_donations(callback):
@@ -198,11 +198,13 @@ def thread_donations(callback):
             idler.start()
             # idler.stop()
             idler.join()
-            logger.info('idler thread has joined - restarting login')
+            print('idler thread has joined - restarting login')
             mail.close()
             mail.logout()
-        except:
-            pass
+        except Exception, e:
+            print("donations thread crash")
+            print(Exception, e)
+            
         sleep(5)
 
 ####
@@ -214,7 +216,7 @@ def thread_donations(callback):
 
 
 def do_something(person, amount):
-    logger.info('Person: {}, Amount: {}'.format(person, amount))
+    print('Person: {}, Amount: {}'.format(person, amount))
 
 
 if __name__ == '__main__':
