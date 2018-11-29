@@ -202,7 +202,7 @@ def thread_donations(callback):
             mail.logout()
         except Exception as e:
             print("donations thread crash")
-            print(Exception, e)
+            print(e)
             
         sleep(5)
 
