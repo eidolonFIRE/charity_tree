@@ -62,8 +62,9 @@ class Idler(object):
         self.thread.join()
 
     def idle(self):
+        global global_alive
         # Starting an unending loop here
-        while True:
+        while global_alive:
             # This is part of the trick to make the loop stop
             # when the stop() command is given
             if self.event.isSet():
