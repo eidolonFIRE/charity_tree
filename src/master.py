@@ -77,14 +77,17 @@ async def _send_cmd(cmd):
         async with websockets.connect('ws://%s:12000' % each) as websocket:
             await websocket.send(cmd)
     # send command again just to be sure
-    sleep(0.1)
+    sleep(0.2)
     for each in slaves:
         async with websockets.connect('ws://%s:12000' % each) as websocket:
             await websocket.send(cmd)
 
 
 def send_cmd(cmd):
-    asyncio.new_event_loop().run_until_complete(_send_cmd(cmd))
+    try:
+        asyncio.new_event_loop().run_until_complete(_send_cmd(cmd))
+    except:
+        pass
 
 
 # callbacks from bots
@@ -187,8 +190,8 @@ background_thread.start()
 slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
 slack_thread.start()
 
-# email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
-# email_thread.start()
+email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
+email_thread.start()
 
 # main holding loop
 while global_alive:
