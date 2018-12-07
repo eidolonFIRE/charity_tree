@@ -120,7 +120,7 @@ def slack_callback(message, channel):
 
 def email_callback(person, amount):
     print("{} made a donation of {}".format(person, amount))
-    add_pattern(choice(pats_hot), 30)
+    add_pattern(choice(pats_hot), 300)
     slack_bot.money_raised += float(amount.replace("$", ""))
 
     # save back to file
