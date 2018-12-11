@@ -21,7 +21,7 @@ frame_rate = config.getint("global", "frame_rate")
 auto_list = config.getboolean("global", "auto_list", fallback=True)
 strips = [
     Strip(config.getint("strips", "strip_a_len"), 18, 10, 0),
-    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
+#    Strip(config.getint("strips", "strip_b_len"), 13, 11, 1),
 ]
 global_alive = True
 

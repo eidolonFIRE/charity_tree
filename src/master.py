@@ -1,11 +1,11 @@
-import slack_bot
+#import slack_bot
 from threading import Thread
 import websockets
 import asyncio
 import os.path
 from time import sleep, time
 from random import choice, uniform, randint
-import donations
+#import donations
 
 # load slaves from config
 slaves = []
@@ -159,7 +159,7 @@ def background_patterns():
         if global_enabled:
             if len(job_stack) == 0:
                 # nothing queued up!
-                add_pattern(choice(pats_mild + pats_medium), randint(60, 120))
+                add_pattern(choice(pats_mild + pats_medium + pats_hot), randint(60, 200))
             else:
                 top = job_stack[-1]
 
@@ -187,11 +187,11 @@ def background_patterns():
 background_thread = Thread(target=background_patterns)
 background_thread.start()
 
-slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
-slack_thread.start()
+#slack_thread = Thread(target=slack_bot.thread_run, args=(slack_callback,))
+#slack_thread.start()
 
-email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
-email_thread.start()
+#email_thread = Thread(target=donations.thread_donations, args=(email_callback,))
+#email_thread.start()
 
 # main holding loop
 while global_alive:
@@ -202,7 +202,7 @@ while global_alive:
 
 # Kill everything
 global_alive = False
-slack_bot.global_alive = False
-donations.global_alive = False
+#slack_bot.global_alive = False
+#donations.global_alive = False
 
 sleep(1)
