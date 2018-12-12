@@ -141,14 +141,14 @@ signal.signal(signal.SIGINT, signal_handler)
 print('Press (Ctrl+C, Enter) to exit or use cmd \"exit\"')
 
 while global_alive:
-    if git_check():
-        print("Update needed.")
-        git_pull()
-        force_restart_main = True
-        force_restart_master = True
-        sleep(120)
+    #if git_check():
+    #    print("Update needed.")
+    #    git_pull()
+    #    force_restart_main = True
+    #    force_restart_master = True
+    #    sleep(120)
 
     # wait 1 minute
-    sleep(60)
+    sleep(10)
 
 global_alive = False

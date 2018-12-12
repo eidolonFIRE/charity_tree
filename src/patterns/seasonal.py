@@ -7,7 +7,7 @@ from color_utils import to_color, color_blend, color_wheel
 class seasonal(base):
     def __init__(self, strip_length):
         super(seasonal, self).__init__(strip_length)
-        self.trunk_taper = 50
+        self.trunk_taper = 0
         self.noise_color = [1.0] * strip_length
         self.noise_color_t = [0.0] * strip_length
         self.noise_bri = [0.0] * strip_length
