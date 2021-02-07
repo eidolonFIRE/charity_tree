@@ -7,3 +7,7 @@ mode=master
 [strips]
 strip_a_len=100
 strip_b_len=100
+
+[email]
+address=GMAIL_HANDLE
+password=
